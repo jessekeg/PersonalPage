@@ -1,0 +1,14 @@
+[
+  { "id": "linkedin", "text": "Add LinkedIn URL (Settings → Social links)", "done": false },
+  { "id": "github", "text": "Add GitHub URL — FOC repo & 6-DOF arm code are high-value for embedded roles (Settings → Social links)", "done": false },
+  { "id": "grad-date", "text": "Confirm expected graduation date, June 2027? (Résumé tab → education)", "done": false },
+  { "id": "coursework", "text": "Add relevant coursework list beyond ECE 118 (Résumé tab → education details)", "done": false },
+  { "id": "boncu-title", "text": "Confirm official Boncu-Space title (Résumé tab → experience)", "done": false },
+  { "id": "ece118", "text": "Finish ECE 118 combat robot writeup — drivetrain, state machine, competition results (Projects + Papers)", "done": false },
+  { "id": "hare-lab", "text": "Expand HARE Lab bullets — which subsystems did you own? (Résumé tab)", "done": false },
+  { "id": "arm-metrics", "text": "Add 6-DOF arm metrics — cost, payload, repeatability (Projects)", "done": false },
+  { "id": "resume-pdf", "text": "Upload a tailored résumé PDF (Settings → Résumé PDF)", "done": false },
+  { "id": "cad-models", "text": "Replace the sample STL with real Onshape exports or embed links (Models tab + project CAD fields)", "done": false },
+  { "id": "site-url", "text": "Set the production site URL after deploying (Settings → Site URL)", "done": false },
+  { "id": "analytics", "text": "Set up GoatCounter analytics (Metrics tab)", "done": false }
+]

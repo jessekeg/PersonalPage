@@ -1,0 +1,176 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CadViewer from '../../components/CadViewer.astro';
+import OnshapeEmbed from '../../components/OnshapeEmbed.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection(
+    'projects',
+    ({ data }) => import.meta.env.DEV || !data.draft,
+  );
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { title, summary, date, role, tags, status, draft, repo, highlights, cad } = project.data;
+---
+
+<Base title={title} description={summary}>
+  <article class="section">
+    <div class="container">
+      <header class="project-header">
+        <a class="back" href="/projects/">← All projects</a>
+        <div class="meta-row">
+          <span class="date">{date}</span>
+          {status === 'in-progress' && <span class="badge">Work in progress</span>}
+          {draft && <span class="badge">Draft — dev only</span>}
+        </div>
+        <h1>{title}</h1>
+        <p class="summary">{summary}</p>
+        {role && <p class="role">{role}</p>}
+        <div class="tags">
+          {tags.map((t) => <span class="tag">{t}</span>)}
+          {
+            repo && (
+              <a class="tag repo" href={repo} target="_blank" rel="noopener noreferrer">
+                Source ↗
+              </a>
+            )
+          }
+        </div>
+      </header>
+
+      {
+        highlights.length > 0 && (
+          <aside class="card highlights">
+            <p class="kicker">Key results</p>
+            <ul>
+              {highlights.map((h) => (
+                <li>{h}</li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        cad.length > 0 && (
+          <section class="cad-section">
+            <p class="kicker">CAD</p>
+            {cad.map((c) =>
+              c.kind === 'stl' ? (
+                <CadViewer src={c.src} title={c.title} caption={c.caption} />
+              ) : (
+                <OnshapeEmbed src={c.src} title={c.title} caption={c.caption} />
+              ),
+            )}
+          </section>
+        )
+      }
+    </div>
+  </article>
+</Base>
+
+<style>
+  .back {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    display: inline-block;
+    margin-bottom: 2rem;
+  }
+
+  .back:hover {
+    color: var(--accent);
+  }
+
+  .project-header {
+    margin-bottom: 2.2rem;
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    font-size: clamp(1.8rem, 4.5vw, 2.7rem);
+    max-width: 24ch;
+    margin-bottom: 0.9rem;
+  }
+
+  .summary {
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    max-width: 64ch;
+    margin-bottom: 0.6rem;
+  }
+
+  .role {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    margin-bottom: 1.2rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .repo {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .highlights {
+    margin-bottom: 2.4rem;
+    max-width: 760px;
+  }
+
+  .highlights .kicker {
+    margin-bottom: 0.7rem;
+  }
+
+  .highlights ul {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+
+  .highlights li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+
+  .highlights li::marker {
+    color: var(--accent);
+  }
+
+  .cad-section {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--line);
+    padding-top: 2rem;
+    max-width: 760px;
+  }
+</style>

@@ -1,0 +1,82 @@
+---
+/**
+ * Embeds a shared Onshape document. In Onshape: Share → enable "Anyone with
+ * the link can view", then use the document URL here. Onshape serves an
+ * interactive viewer inside the iframe for shared documents.
+ */
+interface Props {
+  src: string;
+  title?: string;
+  caption?: string;
+}
+
+const { src, title, caption } = Astro.props;
+---
+
+<figure class="cad-figure">
+  {title && <p class="cad-title">{title}</p>}
+  <div class="onshape-frame">
+    <iframe
+      src={src}
+      title={title ?? 'Onshape CAD model'}
+      loading="lazy"
+      allowfullscreen></iframe>
+  </div>
+  <div class="cad-meta">
+    {caption && <figcaption>{caption}</figcaption>}
+    <a class="cad-link" href={src} target="_blank" rel="noopener noreferrer">
+      Open in Onshape ↗
+    </a>
+  </div>
+</figure>
+
+<style>
+  .cad-figure {
+    margin: 0 0 1.5rem;
+  }
+
+  .cad-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .onshape-frame {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-inset);
+  }
+
+  iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border: none;
+  }
+
+  .cad-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: 0.6rem;
+  }
+
+  figcaption {
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+
+  .cad-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .cad-link:hover {
+    color: var(--accent);
+  }
+</style>

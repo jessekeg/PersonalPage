@@ -1,0 +1,202 @@
+---
+/**
+ * Interactive STL viewer (three.js). Lazy-initializes when scrolled into view.
+ * `src` must point at a file under /public, e.g. /models/part.stl.
+ */
+interface Props {
+  src: string;
+  title?: string;
+  caption?: string;
+}
+
+const { src, title, caption } = Astro.props;
+---
+
+<figure class="cad-figure">
+  {title && <p class="cad-title">{title}</p>}
+  <div class="stl-viewer" data-src={src}>
+    <div class="stl-status">Loading model…</div>
+  </div>
+  <div class="cad-meta">
+    {caption && <figcaption>{caption}</figcaption>}
+    <a class="cad-download" href={src} download>Download STL ↓</a>
+  </div>
+</figure>
+
+<script>
+  import * as THREE from 'three';
+  import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  function cssVar(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function initViewer(el: HTMLElement) {
+    const src = el.dataset.src;
+    if (!src) return;
+    const status = el.querySelector('.stl-status') as HTMLElement;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 5000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    el.appendChild(renderer.domElement);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 1.6));
+    const key = new THREE.DirectionalLight(0xffffff, 1.4);
+    key.position.set(1, 2, 1.5);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.5);
+    fill.position.set(-1.5, -0.5, -1);
+    scene.add(fill);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.2;
+    // Stop auto-rotating once the user takes over.
+    controls.addEventListener('start', () => (controls.autoRotate = false));
+
+    const accent = cssVar('--accent') || '#c2410c';
+    new STLLoader().load(
+      src,
+      (geometry) => {
+        geometry.computeVertexNormals();
+        geometry.center();
+        geometry.computeBoundingBox();
+        const size = new THREE.Vector3();
+        geometry.boundingBox!.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+
+        const material = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(accent),
+          metalness: 0.25,
+          roughness: 0.55,
+          flatShading: false,
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        // STL exports are typically Z-up; three.js is Y-up.
+        mesh.rotation.x = -Math.PI / 2;
+        scene.add(mesh);
+
+        const grid = new THREE.GridHelper(
+          maxDim * 2.5,
+          20,
+          new THREE.Color(cssVar('--line-strong') || '#c8c4b8'),
+          new THREE.Color(cssVar('--line') || '#e4e1d8'),
+        );
+        grid.position.y = -size.z / 2 - maxDim * 0.05;
+        scene.add(grid);
+
+        camera.position.set(maxDim * 1.2, maxDim * 0.9, maxDim * 1.4);
+        camera.lookAt(0, 0, 0);
+        controls.update();
+        status?.remove();
+      },
+      undefined,
+      () => {
+        if (status) status.textContent = 'Could not load model.';
+      },
+    );
+
+    function resize() {
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      if (w === 0 || h === 0) return;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+    new ResizeObserver(resize).observe(el);
+    resize();
+
+    renderer.setAnimationLoop(() => {
+      controls.update();
+      renderer.render(scene, camera);
+    });
+  }
+
+  // Only spin up WebGL when the viewer is actually scrolled into view.
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          observer.unobserve(entry.target);
+          initViewer(entry.target as HTMLElement);
+        }
+      }
+    },
+    { rootMargin: '200px' },
+  );
+
+  document.querySelectorAll<HTMLElement>('.stl-viewer').forEach((el) => observer.observe(el));
+</script>
+
+<style>
+  .cad-figure {
+    margin: 0 0 1.5rem;
+  }
+
+  .cad-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .stl-viewer {
+    position: relative;
+    height: 420px;
+    background: var(--bg-inset);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: grab;
+  }
+
+  .stl-viewer:active {
+    cursor: grabbing;
+  }
+
+  .stl-status {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+
+  .cad-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: 0.6rem;
+  }
+
+  figcaption {
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+
+  .cad-download {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .cad-download:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .stl-viewer {
+      height: 300px;
+    }
+  }
+</style>

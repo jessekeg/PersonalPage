@@ -1,0 +1,342 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import site from '../data/site.json';
+import resume from '../data/resume.json';
+
+const featured = (await getCollection('projects', ({ data }) => data.featured && !data.draft))
+  .sort((a, b) => b.data.sortDate.valueOf() - a.data.sortDate.valueOf());
+
+const recentExperience = resume.experience.slice(0, 3);
+const skillGroups = resume.skills;
+
+const personLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  email: `mailto:${site.email}`,
+  jobTitle: 'Robotics Engineering Student',
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'University of California, Santa Cruz' },
+  address: { '@type': 'PostalAddress', addressLocality: 'Santa Cruz', addressRegion: 'CA' },
+  ...(site.siteUrl ? { url: site.siteUrl } : {}),
+  sameAs: Object.values(site.social).filter(Boolean),
+});
+---
+
+<Base>
+  <script is:inline type="application/ld+json" set:html={personLd} />
+
+  <section class="hero dot-grid">
+    <div class="container">
+      <p class="kicker">{site.tagline}</p>
+      <h1>{site.name}</h1>
+      <p class="role-line">{site.roleLine}</p>
+      <p class="hero-summary">{site.summary}</p>
+      <div class="hero-actions">
+        <a class="btn" href="/projects/">View projects</a>
+        <a class="btn btn-ghost" href="/resume/">Résumé</a>
+      </div>
+      <dl class="stats">
+        {
+          site.stats.map((s) => (
+            <div class="stat">
+              <dt>{s.value}</dt>
+              <dd>{s.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        kicker="01 / Projects"
+        title="Selected work"
+        moreHref="/projects/"
+        moreLabel="All projects"
+      />
+      <div class="project-grid">
+        {featured.map((p, i) => <ProjectCard project={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container about-grid">
+      <div>
+        <SectionHeading kicker="02 / About" title="From raw stock to closed-loop control" />
+        <p class="about-text">
+          I came to engineering through the trades. I was welding professionally before I started
+          my robotics degree at UC Santa Cruz, and I've run my own <a href="/fabrication/">fabrication
+          and welding</a> business, Kegley Metalwork, since 2022.
+        </p>
+        <p class="about-text">
+          That background carries into the engineering work. I design parts that can actually be
+          made, I'm used to owning a job from quote to delivery, and I've spent years explaining
+          technical constraints to clients in plain terms.
+        </p>
+        <div class="certs card">
+          <p class="kicker">Certifications</p>
+          {
+            resume.certifications.map((c) => (
+              <p class="cert">
+                <strong>{c.name}</strong>
+                <span> — {c.issuer}</span>
+              </p>
+            ))
+          }
+        </div>
+      </div>
+      <div class="skills-col">
+        {
+          skillGroups.map((g) => (
+            <div class="skill-group">
+              <p class="skill-label">{g.group}</p>
+              <div class="skill-tags">
+                {g.items.slice(0, 7).map((item) => (
+                  <span class="tag">{item}</span>
+                ))}
+                {g.items.length > 7 && (
+                  <a class="tag tag-more" href="/resume/">
+                    +{g.items.length - 7} more
+                  </a>
+                )}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading
+        kicker="03 / Experience"
+        title="Recent roles"
+        moreHref="/resume/"
+        moreLabel="Full résumé"
+      />
+      <div class="exp-list">
+        {
+          recentExperience.map((e) => (
+            <a class="exp-row" href="/resume/">
+              <span class="exp-dates">{e.dates}</span>
+              <span class="exp-main">
+                <span class="exp-title">{e.title}</span>
+                <span class="exp-company">{e.company}</span>
+              </span>
+              <span class="exp-loc">{e.location}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: clamp(4rem, 10vw, 7rem) clamp(3rem, 7vw, 5rem);
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 7vw, 4.2rem);
+    margin-bottom: 0.8rem;
+  }
+
+  .role-line {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    font-weight: 500;
+    color: var(--ink);
+    max-width: 60ch;
+    margin-bottom: 1rem;
+  }
+
+  .hero-summary {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    font-size: 1.05rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-bottom: 3rem;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin: 0;
+    border-top: 1px solid var(--line);
+    padding-top: 1.5rem;
+    max-width: 820px;
+  }
+
+  .stat dt {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    max-width: 26ch;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+  }
+
+  .about-text {
+    color: var(--ink-soft);
+    margin-bottom: 1.1rem;
+    max-width: 58ch;
+  }
+
+  .about-text a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 2px;
+  }
+
+  .about-text a:hover {
+    color: var(--accent);
+  }
+
+  .certs {
+    margin-top: 1.6rem;
+  }
+
+  .certs .kicker {
+    margin-bottom: 0.6rem;
+  }
+
+  .cert {
+    font-size: 0.9rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .cert span {
+    color: var(--ink-faint);
+  }
+
+  .skills-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .skill-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 0.5rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tag-more {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .exp-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .exp-row {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 1rem 0.4rem;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.15s ease;
+  }
+
+  .exp-row:first-child {
+    border-top: 1px solid var(--line);
+  }
+
+  .exp-row:hover {
+    background: var(--accent-soft);
+  }
+
+  .exp-dates {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+
+  .exp-main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    align-items: baseline;
+  }
+
+  .exp-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .exp-company {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+
+  .exp-loc {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 800px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stats {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .exp-row {
+      grid-template-columns: 1fr;
+      gap: 0.15rem;
+    }
+
+    .exp-loc {
+      display: none;
+    }
+  }
+</style>

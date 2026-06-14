@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Site Dashboard — Jesse Kegley</title>
+<style>
+  :root {
+    --bg: #faf9f6;
+    --raised: #ffffff;
+    --inset: #f1efe9;
+    --ink: #191b1f;
+    --soft: #565b63;
+    --faint: #8b8f97;
+    --line: #e4e1d8;
+    --accent: #c2410c;
+    --accent-soft: rgba(194, 65, 12, 0.08);
+    --green: #2f9e44;
+    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; display: flex; min-height: 100vh;
+    background: var(--bg); color: var(--ink); font-family: var(--sans);
+    font-size: 14px; line-height: 1.5;
+  }
+
+  /* ---- sidebar ---- */
+  aside {
+    width: 210px; flex-shrink: 0; background: #16191c; color: #eae9e4;
+    display: flex; flex-direction: column; padding: 1.2rem 0.8rem;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { display: flex; align-items: center; gap: 0.6rem; padding: 0 0.6rem 1.2rem; }
+  .brand-mark {
+    font-family: var(--mono); font-weight: 700; font-size: 0.72rem;
+    background: var(--accent); color: #fff; padding: 0.25rem 0.4rem; border-radius: 4px;
+  }
+  .brand-name { font-weight: 600; font-size: 0.95rem; }
+  .nav-btn {
+    display: block; width: 100%; text-align: left; background: none; border: none;
+    color: #a2a6ad; font-family: var(--sans); font-size: 0.9rem; padding: 0.55rem 0.7rem;
+    border-radius: 6px; cursor: pointer; margin-bottom: 2px;
+  }
+  .nav-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .nav-btn.active { color: #fff; background: rgba(251,146,60,0.15); }
+  .nav-btn .count {
+    float: right; font-family: var(--mono); font-size: 0.7rem; color: var(--faint);
+  }
+  .side-foot { margin-top: auto; padding: 0.6rem; font-size: 0.78rem; }
+  .side-foot a { color: #a2a6ad; display: block; padding: 0.25rem 0; text-decoration: none; }
+  .side-foot a:hover { color: #fb923c; }
+
+  /* ---- main ---- */
+  main { flex: 1; padding: 2rem 2.4rem 4rem; max-width: 1100px; }
+  h1 { font-size: 1.4rem; margin: 0 0 0.3rem; }
+  .sub { color: var(--faint); margin: 0 0 1.6rem; font-size: 0.85rem; }
+  h2 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); margin: 1.8rem 0 0.8rem; font-family: var(--mono); }
+
+  .grid { display: grid; gap: 0.9rem; }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card {
+    background: var(--raised); border: 1px solid var(--line); border-radius: 8px;
+    padding: 1rem 1.2rem;
+  }
+  .stat-num { font-size: 1.7rem; font-weight: 700; color: var(--accent); font-family: var(--mono); }
+  .stat-label { color: var(--soft); font-size: 0.8rem; }
+
+  /* ---- forms ---- */
+  label { display: block; font-size: 0.74rem; font-weight: 600; color: var(--soft); margin: 0.9rem 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  input[type=text], input[type=date], input[type=email], select, textarea {
+    width: 100%; padding: 0.5rem 0.65rem; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--raised); color: var(--ink); font-family: var(--sans); font-size: 0.9rem;
+  }
+  textarea { resize: vertical; }
+  textarea.mono, input.mono { font-family: var(--mono); font-size: 0.82rem; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+  input:disabled { background: var(--inset); color: var(--faint); }
+  .check { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; font-size: 0.88rem; }
+  .check input { width: auto; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 1rem; }
+
+  button.btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 6px;
+    padding: 0.55rem 1.1rem; font-size: 0.88rem; font-weight: 600; cursor: pointer;
+    font-family: var(--sans);
+  }
+  button.btn:hover { filter: brightness(1.08); }
+  button.ghost {
+    background: none; border: 1px solid var(--line); color: var(--soft);
+    border-radius: 6px; padding: 0.45rem 0.9rem; font-size: 0.82rem; cursor: pointer;
+  }
+  button.ghost:hover { border-color: var(--accent); color: var(--accent); }
+  button.danger { border-color: transparent; color: #c92a2a; }
+  button.danger:hover { border-color: #c92a2a; color: #c92a2a; }
+  .actions { display: flex; gap: 0.6rem; margin-top: 1.4rem; align-items: center; }
+
+  /* ---- two-pane editor ---- */
+  .split { display: grid; grid-template-columns: 260px 1fr; gap: 1.4rem; align-items: start; }
+  .list-pane { display: flex; flex-direction: column; gap: 4px; }
+  .item-btn {
+    text-align: left; background: var(--raised); border: 1px solid var(--line);
+    border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer; font-family: var(--sans);
+    color: var(--ink); font-size: 0.85rem;
+  }
+  .item-btn:hover { border-color: var(--accent); }
+  .item-btn.active { border-color: var(--accent); background: var(--accent-soft); }
+  .item-btn .chips { margin-top: 0.2rem; }
+  .chip {
+    display: inline-block; font-family: var(--mono); font-size: 0.62rem; padding: 0.05rem 0.4rem;
+    border-radius: 99px; border: 1px solid var(--line); color: var(--faint); margin-right: 0.3rem;
+  }
+  .chip.draft { border-color: var(--accent); color: var(--accent); }
+  .chip.live { border-color: var(--green); color: var(--green); }
+
+  .subrow {
+    display: grid; grid-template-columns: 110px 1fr 1fr 1fr 30px; gap: 0.5rem;
+    margin-bottom: 0.5rem; align-items: center;
+  }
+  .subrow-2 { display: grid; grid-template-columns: 120px 1fr 30px; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center; }
+  .x-btn { background: none; border: none; color: var(--faint); cursor: pointer; font-size: 1rem; }
+  .x-btn:hover { color: #c92a2a; }
+
+  /* ---- checklist ---- */
+  .todo { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.55rem 0.2rem; border-bottom: 1px solid var(--line); }
+  .todo:last-of-type { border-bottom: none; }
+  .todo input[type=checkbox] { margin-top: 0.2rem; }
+  .todo.done span { text-decoration: line-through; color: var(--faint); }
+  .todo span { flex: 1; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--line); }
+  td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--line); }
+  code { font-family: var(--mono); font-size: 0.78rem; background: var(--inset); padding: 0.1rem 0.35rem; border-radius: 4px; }
+
+  .note { background: var(--inset); border: 1px solid var(--line); border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.84rem; color: var(--soft); margin: 1rem 0; }
+  .note ol { margin: 0.4rem 0 0; padding-left: 1.2rem; }
+  .note li { margin-bottom: 0.25rem; }
+
+  #toast {
+    position: fixed; bottom: 1.4rem; right: 1.4rem; background: #16191c; color: #fff;
+    padding: 0.7rem 1.1rem; border-radius: 8px; font-size: 0.85rem; opacity: 0;
+    transition: opacity 0.2s; pointer-events: none; max-width: 360px; z-index: 99;
+  }
+  #toast.show { opacity: 1; }
+  #toast.err { background: #c92a2a; }
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand"><span class="brand-mark">JK</span><span class="brand-name">Dashboard</span></div>
+  <nav id="nav"></nav>
+  <div class="side-foot">
+    <a href="http://localhost:4321" target="_blank">Open site ↗</a>
+    <a href="https://www.goatcounter.com" target="_blank">GoatCounter ↗</a>
+    <a href="https://cad.onshape.com" target="_blank">Onshape ↗</a>
+  </div>
+</aside>
+<main id="main">Loading…</main>
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+let state = null;
+let tab = 'overview';
+const sel = { projects: null, papers: null };
+let slugTouched = false;
+
+const TABS = [
+  ['overview', 'Overview'],
+  ['projects', 'Projects'],
+  ['papers', 'Papers'],
+  ['fabrication', 'Fabrication'],
+  ['resume', 'Résumé'],
+  ['models', 'CAD Models'],
+  ['settings', 'Settings'],
+  ['metrics', 'Metrics'],
+];
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) =>
+  String(s ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+function toast(msg, isErr = false) {
+  const el = $('#toast');
+  el.textContent = msg;
+  el.className = 'show' + (isErr ? ' err' : '');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => (el.className = ''), 2600);
+}
+
+async function api(method, path, body, raw = false) {
+  const res = await fetch(path, {
+    method,
+    body: raw ? body : body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json.error || res.statusText);
+  return json;
+}
+
+async function load() {
+  state = await api('GET', '/api/state');
+  render();
+}
+
+function setTab(t) {
+  tab = t;
+  render();
+}
+
+function render() {
+  $('#nav').innerHTML = TABS.map(([id, label]) => {
+    let count = '';
+    if (id === 'projects') count = `<span class="count">${state.projects.length}</span>`;
+    if (id === 'papers') count = `<span class="count">${state.papers.length}</span>`;
+    if (id === 'fabrication') count = `<span class="count">${(state.fabrication?.gallery ?? []).length}</span>`;
+    if (id === 'models') count = `<span class="count">${state.models.length}</span>`;
+    return `<button class="nav-btn ${tab === id ? 'active' : ''}" onclick="setTab('${id}')">${label}${count}</button>`;
+  }).join('');
+  $('#main').innerHTML = views[tab]();
+  if (after[tab]) after[tab]();
+}
+
+// ============================================================ views
+
+const views = {};
+const after = {};
+
+// ---- overview ----
+views.overview = () => {
+  const pubP = state.projects.filter((p) => !p.data.draft).length;
+  const pubW = state.papers.filter((p) => !p.data.draft).length;
+  const todo = state.checklist.filter((c) => !c.done).length;
+  return `
+    <h1>Overview</h1>
+    <p class="sub">Everything here edits the files in this repo directly. Run <code>npm run dev</code> alongside to preview changes live.</p>
+    <div class="grid cols-4">
+      <div class="card"><div class="stat-num">${pubP}<span style="font-size:0.9rem;color:var(--faint)">/${state.projects.length}</span></div><div class="stat-label">projects published</div></div>
+      <div class="card"><div class="stat-num">${pubW}<span style="font-size:0.9rem;color:var(--faint)">/${state.papers.length}</span></div><div class="stat-label">papers published</div></div>
+      <div class="card"><div class="stat-num">${state.models.length}</div><div class="stat-label">CAD models</div></div>
+      <div class="card"><div class="stat-num">${todo}</div><div class="stat-label">launch tasks left</div></div>
+    </div>
+    <h2>Launch checklist</h2>
+    <div class="card">
+      ${state.checklist.map((c, i) => `
+        <div class="todo ${c.done ? 'done' : ''}">
+          <input type="checkbox" ${c.done ? 'checked' : ''} onchange="toggleTodo(${i})" />
+          <span>${esc(c.text)}</span>
+          <button class="x-btn" title="Remove" onclick="removeTodo(${i})">×</button>
+        </div>`).join('')}
+      <div style="display:flex;gap:0.5rem;margin-top:0.9rem">
+        <input type="text" id="new-todo" placeholder="Add a task…" onkeydown="if(event.key==='Enter')addTodo()" />
+        <button class="ghost" onclick="addTodo()">Add</button>
+      </div>
+    </div>`;
+};
+
+async function saveChecklist() {
+  await api('PUT', '/api/checklist', state.checklist);
+  render();
+}
+window.toggleTodo = (i) => { state.checklist[i].done = !state.checklist[i].done; saveChecklist(); };
+window.removeTodo = (i) => { state.checklist.splice(i, 1); saveChecklist(); };
+window.addTodo = () => {
+  const v = $('#new-todo').value.trim();
+  if (!v) return;
+  state.checklist.push({ id: 'c' + Date.now(), text: v, done: false });
+  saveChecklist();
+};
+
+// ---- shared content editor helpers ----
+function listPane(collection) {
+  const items = state[collection];
+  return `
+    <div class="list-pane">
+      <button class="btn" style="margin-bottom:0.5rem" onclick="newItem('${collection}')">+ New</button>
+      ${items.map((it) => `
+        <button class="item-btn ${sel[collection] === it.slug ? 'active' : ''}" onclick="selectItem('${collection}','${it.slug}')">
+          ${esc(it.data.title || it.slug)}
+          <div class="chips">
+            ${it.data.draft ? '<span class="chip draft">draft</span>' : '<span class="chip live">live</span>'}
+            ${it.data.featured ? '<span class="chip">featured</span>' : ''}
+            <span class="chip">${esc(it.data.date || '')}</span>
+          </div>
+        </button>`).join('')}
+    </div>`;
+}
+
+window.selectItem = (collection, slug) => { sel[collection] = slug; slugTouched = true; render(); };
+window.newItem = (collection) => { sel[collection] = '__new__'; slugTouched = false; render(); };
+
+function findItem(collection) {
+  if (sel[collection] === '__new__') return null;
+  return state[collection].find((p) => p.slug === sel[collection]) || null;
+}
+
+const slugify = (s) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+
+window.autoSlug = () => {
+  if (slugTouched) return;
+  $('#f-slug').value = slugify($('#f-title').value);
+};
+
+const today = () => new Date().toISOString().slice(0, 10);
+
+// ---- projects ----
+views.projects = () => {
+  const item = findItem('projects');
+  const isNew = sel.projects === '__new__';
+  const d = item ? item.data : { status: 'completed', draft: true, featured: false, tags: [], highlights: [], cad: [], sortDate: today() };
+  const body = item ? item.body : '';
+  const editor = !item && !isNew
+    ? `<div class="card" style="color:var(--faint)">Select a project to edit, or create a new one.</div>`
+    : `
+    <div class="card">
+      <div class="row2">
+        <div><label>Slug (URL)</label><input type="text" id="f-slug" class="mono" value="${esc(item?.slug ?? '')}" ${item ? 'disabled' : ''} oninput="slugTouched=true" /></div>
+        <div><label>Display date</label><input type="text" id="f-date" placeholder="Winter 2026" value="${esc(d.date ?? '')}" /></div>
+      </div>
+      <label>Title</label><input type="text" id="f-title" value="${esc(d.title ?? '')}" oninput="autoSlug()" />
+      <label>Summary (cards & SEO)</label><textarea id="f-summary" rows="2">${esc(d.summary ?? '')}</textarea>
+      <div class="row3">
+        <div><label>Sort date</label><input type="date" id="f-sortDate" value="${esc(String(d.sortDate ?? '').slice(0, 10))}" /></div>
+        <div><label>Status</label>
+          <select id="f-status">
+            ${['completed', 'in-progress', 'ongoing'].map((s) => `<option ${d.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+          </select>
+        </div>
+        <div><label>Role / context</label><input type="text" id="f-role" value="${esc(d.role ?? '')}" /></div>
+      </div>
+      <div class="row2">
+        <div class="check"><input type="checkbox" id="f-featured" ${d.featured ? 'checked' : ''} /><span>Featured on homepage</span></div>
+        <div class="check"><input type="checkbox" id="f-draft" ${d.draft ? 'checked' : ''} /><span>Draft (hidden from published site)</span></div>
+      </div>
+      <label>Tags (comma-separated)</label><input type="text" id="f-tags" class="mono" value="${esc((d.tags ?? []).join(', '))}" />
+      <label>Repo URL (optional)</label><input type="text" id="f-repo" class="mono" value="${esc(d.repo ?? '')}" />
+      <label>Key results (one per line)</label><textarea id="f-highlights" rows="4">${esc((d.highlights ?? []).join('\n'))}</textarea>
+
+      <label>CAD embeds</label>
+      <div id="cad-rows">${(d.cad ?? []).map(cadRow).join('')}</div>
+      <button class="ghost" onclick="addCadRow()">+ Add CAD embed</button>
+      <div class="note">STL: upload in <b>CAD Models</b>, then use its path (e.g. <code>/models/part.stl</code>).
+      Onshape: Share → "Anyone with the link can view" → paste the document URL with kind <code>onshape</code>.</div>
+
+      <label>Body (markdown)</label><textarea id="f-body" class="mono" rows="16">${esc(body)}</textarea>
+      <div class="actions">
+        <button class="btn" onclick="saveItem('projects', ${isNew})">${isNew ? 'Create project' : 'Save changes'}</button>
+        ${item ? `<a href="http://localhost:4321/projects/${item.slug}/" target="_blank"><button class="ghost">Preview ↗</button></a>` : ''}
+        ${item ? `<button class="ghost danger" onclick="deleteItem('projects')">Delete</button>` : ''}
+      </div>
+    </div>`;
+  return `<h1>Projects</h1><p class="sub">Markdown files in <code>src/content/projects/</code>. Drafts show in dev with a badge but are excluded from the deployed build.</p>
+    <div class="split">${listPane('projects')}${editor}</div>`;
+};
+
+function cadRow(c = { kind: 'stl', src: '', title: '', caption: '' }) {
+  return `<div class="subrow cad-row">
+    <select class="cad-kind">
+      <option value="stl" ${c.kind === 'stl' ? 'selected' : ''}>STL viewer</option>
+      <option value="onshape" ${c.kind === 'onshape' ? 'selected' : ''}>Onshape</option>
+    </select>
+    <input type="text" class="cad-src mono" placeholder="/models/part.stl or Onshape URL" value="${esc(c.src)}" />
+    <input type="text" class="cad-title" placeholder="Title" value="${esc(c.title ?? '')}" />
+    <input type="text" class="cad-caption" placeholder="Caption" value="${esc(c.caption ?? '')}" />
+    <button class="x-btn" onclick="this.closest('.cad-row').remove()">×</button>
+  </div>`;
+}
+window.addCadRow = () => $('#cad-rows').insertAdjacentHTML('beforeend', cadRow());
+
+// ---- papers ----
+views.papers = () => {
+  const item = findItem('papers');
+  const isNew = sel.papers === '__new__';
+  const d = item ? item.data : { draft: true, tags: [], sortDate: today() };
+  const body = item ? item.body : '';
+  const editor = !item && !isNew
+    ? `<div class="card" style="color:var(--faint)">Select a paper to edit, or create a new one.</div>`
+    : `
+    <div class="card">
+      <div class="row2">
+        <div><label>Slug (URL)</label><input type="text" id="f-slug" class="mono" value="${esc(item?.slug ?? '')}" ${item ? 'disabled' : ''} oninput="slugTouched=true" /></div>
+        <div><label>Display date</label><input type="text" id="f-date" placeholder="Spring 2026" value="${esc(d.date ?? '')}" /></div>
+      </div>
+      <label>Title</label><input type="text" id="f-title" value="${esc(d.title ?? '')}" oninput="autoSlug()" />
+      <label>Summary / abstract</label><textarea id="f-summary" rows="3">${esc(d.summary ?? '')}</textarea>
+      <div class="row2">
+        <div><label>Venue (course, journal…)</label><input type="text" id="f-venue" value="${esc(d.venue ?? '')}" /></div>
+        <div><label>Sort date</label><input type="date" id="f-sortDate" value="${esc(String(d.sortDate ?? '').slice(0, 10))}" /></div>
+      </div>
+      <div class="row2">
+        <div><label>PDF path or URL</label><input type="text" id="f-pdf" class="mono" placeholder="/papers/report.pdf" value="${esc(d.pdf ?? '')}" /></div>
+        <div><label>External link (optional)</label><input type="text" id="f-link" class="mono" value="${esc(d.link ?? '')}" /></div>
+      </div>
+      <div class="check"><input type="checkbox" id="f-draft" ${d.draft ? 'checked' : ''} /><span>Draft — listed under "in the works", body unpublished</span></div>
+      <label>Tags (comma-separated)</label><input type="text" id="f-tags" class="mono" value="${esc((d.tags ?? []).join(', '))}" />
+      <label>Notes / body (markdown)</label><textarea id="f-body" class="mono" rows="10">${esc(body)}</textarea>
+      <div class="actions">
+        <button class="btn" onclick="saveItem('papers', ${isNew})">${isNew ? 'Create paper' : 'Save changes'}</button>
+        ${item ? `<button class="ghost danger" onclick="deleteItem('papers')">Delete</button>` : ''}
+      </div>
+    </div>`;
+  return `<h1>Papers & writeups</h1><p class="sub">Drafts are listed on the site as "in the works" (title + venue only). Drop PDFs into <code>public/papers/</code> or use an external URL.</p>
+    <div class="split">${listPane('papers')}${editor}</div>`;
+};
+
+// ---- save/delete for both collections ----
+window.saveItem = async (collection, isNew) => {
+  const val = (id) => document.getElementById(id)?.value.trim() ?? '';
+  const checked = (id) => document.getElementById(id)?.checked ?? false;
+  const data = {
+    title: val('f-title'),
+    summary: val('f-summary'),
+    date: val('f-date'),
+    sortDate: val('f-sortDate') || today(),
+    draft: checked('f-draft'),
+    tags: val('f-tags').split(',').map((s) => s.trim()).filter(Boolean),
+  };
+  if (collection === 'projects') {
+    data.status = val('f-status');
+    data.featured = checked('f-featured');
+    data.role = val('f-role');
+    data.repo = val('f-repo');
+    data.highlights = val('f-highlights').split('\n').map((s) => s.trim()).filter(Boolean);
+    data.cad = [...document.querySelectorAll('.cad-row')]
+      .map((r) => ({
+        kind: r.querySelector('.cad-kind').value,
+        src: r.querySelector('.cad-src').value.trim(),
+        title: r.querySelector('.cad-title').value.trim(),
+        caption: r.querySelector('.cad-caption').value.trim(),
+      }))
+      .filter((c) => c.src);
+  } else {
+    data.venue = val('f-venue');
+    data.pdf = val('f-pdf');
+    data.link = val('f-link');
+  }
+  if (!data.title) return toast('Title is required', true);
+  const body = document.getElementById('f-body').value;
+  try {
+    if (isNew) {
+      const slug = val('f-slug') || slugify(data.title);
+      if (!slug) return toast('Slug is required', true);
+      await api('POST', `/api/content/${collection}`, { slug, data, body });
+      sel[collection] = slug;
+    } else {
+      await api('PUT', `/api/content/${collection}/${sel[collection]}`, { data, body });
+    }
+    toast('Saved ✓');
+    await load();
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+
+window.deleteItem = async (collection) => {
+  const slug = sel[collection];
+  if (!confirm(`Delete "${slug}"? The markdown file will be removed.`)) return;
+  try {
+    await api('DELETE', `/api/content/${collection}/${slug}`);
+    sel[collection] = null;
+    toast('Deleted');
+    await load();
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+
+// ---- fabrication ----
+views.fabrication = () => {
+  const f = state.fabrication || { title: '', intro: '', gallery: [] };
+  return `
+  <h1>Fabrication & welding</h1>
+  <p class="sub">A photo gallery for shop work and side projects — saved to <code>src/data/fabrication.json</code>. Understated by design: it sits behind a footer link and an About-section link, not the main nav. Photos go in <code>public/images/fabrication/</code>.</p>
+  <div class="card">
+    <label>Section title</label><input type="text" id="fab-title" value="${esc(f.title)}" />
+    <label>Intro paragraph</label><textarea id="fab-intro" rows="3">${esc(f.intro)}</textarea>
+    <h2>Photos</h2>
+    <div id="fab-rows">${(f.gallery || []).map(fabRow).join('') || '<p style="color:var(--faint);font-size:0.85rem">No photos yet — upload one below to start the gallery.</p>'}</div>
+    <div class="actions" style="margin-top:0.8rem">
+      <input type="file" id="fab-file" accept="image/png,image/jpeg,image/webp,image/gif" />
+      <button class="ghost" onclick="uploadFabImage()">Upload photo</button>
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="saveFabrication()">Save gallery</button>
+      <a href="http://localhost:4321/fabrication/" target="_blank"><button class="ghost">Preview ↗</button></a>
+    </div>
+  </div>`;
+};
+
+function fabRow(g = { image: '', caption: '' }) {
+  return `<div class="subrow-2 fab-row">
+    <input type="text" class="fab-image mono" placeholder="/images/fabrication/weld.jpg" value="${esc(g.image)}" />
+    <input type="text" class="fab-caption" placeholder="Caption (optional)" value="${esc(g.caption ?? '')}" />
+    <button class="x-btn" onclick="this.closest('.fab-row').remove()">×</button>
+  </div>`;
+}
+
+window.uploadFabImage = async () => {
+  const file = $('#fab-file').files[0];
+  if (!file) return toast('Choose an image first', true);
+  const safe = file.name.replace(/[^A-Za-z0-9._-]/g, '-');
+  try {
+    const r = await api('POST', `/api/upload/fabrication-image?name=${encodeURIComponent(safe)}`, file, true);
+    const rows = $('#fab-rows');
+    // Clear the "no photos yet" placeholder on first upload.
+    if (!rows.querySelector('.fab-row')) rows.innerHTML = '';
+    rows.insertAdjacentHTML('beforeend', fabRow({ image: r.path, caption: '' }));
+    toast(`Uploaded → ${r.path} — add a caption and Save`);
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+
+window.saveFabrication = async () => {
+  const gallery = [...document.querySelectorAll('.fab-row')]
+    .map((r) => ({
+      image: r.querySelector('.fab-image').value.trim(),
+      caption: r.querySelector('.fab-caption').value.trim(),
+    }))
+    .filter((g) => g.image);
+  const next = {
+    title: $('#fab-title').value.trim(),
+    intro: $('#fab-intro').value.trim(),
+    gallery,
+  };
+  try {
+    await api('PUT', '/api/fabrication', next);
+    state.fabrication = next;
+    toast('Gallery saved ✓');
+    render();
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+
+// ---- resume ----
+views.resume = () => `
+  <h1>Résumé data</h1>
+  <p class="sub">Drives the <a href="http://localhost:4321/resume/" target="_blank">/resume</a> page and homepage sections. Structured JSON — edit carefully, then Save (it validates first).</p>
+  <div class="card">
+    <textarea id="resume-json" class="mono" rows="30">${esc(JSON.stringify(state.resume, null, 2))}</textarea>
+    <div class="actions">
+      <button class="btn" onclick="saveResume()">Save résumé data</button>
+      <button class="ghost" onclick="formatResume()">Re-format JSON</button>
+    </div>
+  </div>`;
+
+window.saveResume = async () => {
+  try {
+    const parsed = JSON.parse($('#resume-json').value);
+    await api('PUT', '/api/resume', parsed);
+    state.resume = parsed;
+    toast('Résumé data saved ✓');
+  } catch (e) {
+    toast('Invalid JSON: ' + e.message, true);
+  }
+};
+window.formatResume = () => {
+  try {
+    $('#resume-json').value = JSON.stringify(JSON.parse($('#resume-json').value), null, 2);
+  } catch (e) {
+    toast('Invalid JSON: ' + e.message, true);
+  }
+};
+
+// ---- models ----
+views.models = () => `
+  <h1>CAD models</h1>
+  <p class="sub">STL files served from <code>public/models/</code>. Reference them from a project's CAD embeds. From Onshape: right-click a tab → Export → STL.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>File</th><th>Size</th><th>Path to use</th><th></th></tr></thead>
+      <tbody>
+        ${state.models.map((m) => `
+          <tr>
+            <td>${esc(m.name)}</td>
+            <td>${(m.size / 1024).toFixed(0)} KB</td>
+            <td><code>/models/${esc(m.name)}</code> <button class="ghost" style="padding:0.1rem 0.5rem;font-size:0.7rem" onclick="navigator.clipboard.writeText('/models/${esc(m.name)}');toast('Copied')">copy</button></td>
+            <td><button class="x-btn" onclick="deleteModel('${esc(m.name)}')">×</button></td>
+          </tr>`).join('') || '<tr><td colspan="4" style="color:var(--faint)">No models yet.</td></tr>'}
+      </tbody>
+    </table>
+    <div class="actions">
+      <input type="file" id="model-file" accept=".stl" />
+      <button class="btn" onclick="uploadModel()">Upload STL</button>
+    </div>
+  </div>`;
+
+window.uploadModel = async () => {
+  const f = $('#model-file').files[0];
+  if (!f) return toast('Choose an .stl file first', true);
+  try {
+    const r = await api('POST', `/api/upload/model?name=${encodeURIComponent(f.name)}`, f, true);
+    toast(`Uploaded → ${r.path}`);
+    await load();
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+window.deleteModel = async (name) => {
+  if (!confirm(`Delete ${name}?`)) return;
+  await api('DELETE', `/api/model/${encodeURIComponent(name)}`);
+  await load();
+};
+
+// ---- settings ----
+views.settings = () => {
+  const s = state.site;
+  return `
+  <h1>Site settings</h1>
+  <p class="sub">Identity, contact, links, and analytics — saved to <code>src/data/site.json</code>.</p>
+  <div class="card">
+    <div class="row2">
+      <div><label>Name</label><input type="text" id="s-name" value="${esc(s.name)}" /></div>
+      <div><label>Location</label><input type="text" id="s-location" value="${esc(s.location)}" /></div>
+    </div>
+    <label>Tagline (hero kicker)</label><input type="text" id="s-tagline" value="${esc(s.tagline)}" />
+    <label>Role line (hero)</label><textarea id="s-roleLine" rows="2">${esc(s.roleLine)}</textarea>
+    <label>Summary (hero + SEO description)</label><textarea id="s-summary" rows="3">${esc(s.summary)}</textarea>
+    <label>Availability (contact band — your job-search pitch)</label><textarea id="s-availability" rows="2">${esc(s.availability)}</textarea>
+    <div class="row3">
+      <div><label>Email</label><input type="text" id="s-email" value="${esc(s.email)}" /></div>
+      <div><label>Phone</label><input type="text" id="s-phone" value="${esc(s.phone)}" /></div>
+      <div class="check" style="margin-top:2rem"><input type="checkbox" id="s-showPhone" ${s.showPhone ? 'checked' : ''} /><span>Show phone publicly</span></div>
+    </div>
+    <h2>Social links</h2>
+    <div class="row3">
+      <div><label>GitHub</label><input type="text" id="s-github" class="mono" placeholder="https://github.com/…" value="${esc(s.social.github)}" /></div>
+      <div><label>LinkedIn</label><input type="text" id="s-linkedin" class="mono" placeholder="https://linkedin.com/in/…" value="${esc(s.social.linkedin)}" /></div>
+      <div><label>Onshape (public profile/doc)</label><input type="text" id="s-onshape" class="mono" value="${esc(s.social.onshape)}" /></div>
+    </div>
+    <h2>Hero stats</h2>
+    <div id="stat-rows">
+      ${s.stats.map((st) => `
+        <div class="subrow-2 stat-row">
+          <input type="text" class="st-value mono" placeholder="6+ yrs" value="${esc(st.value)}" />
+          <input type="text" class="st-label" placeholder="label" value="${esc(st.label)}" />
+          <button class="x-btn" onclick="this.closest('.stat-row').remove()">×</button>
+        </div>`).join('')}
+    </div>
+    <button class="ghost" onclick="addStatRow()">+ Add stat</button>
+    <h2>Deployment & analytics</h2>
+    <div class="row2">
+      <div><label>Production site URL</label><input type="text" id="s-siteUrl" class="mono" placeholder="https://jessekegley.com" value="${esc(s.siteUrl)}" /></div>
+      <div><label>GoatCounter code (yourcode.goatcounter.com)</label><input type="text" id="s-gc" class="mono" value="${esc(s.analytics.goatcounterCode)}" /></div>
+    </div>
+    <div class="actions"><button class="btn" onclick="saveSettings()">Save settings</button></div>
+  </div>
+  <h2>Résumé PDF</h2>
+  <div class="card">
+    <p style="margin:0 0 0.8rem;color:var(--soft)">${state.hasResumePdf ? '✓ resume.pdf is uploaded — the Download button shows on /resume.' : 'No resume.pdf yet — the Download button is hidden until you upload one.'}</p>
+    <div class="actions" style="margin-top:0">
+      <input type="file" id="pdf-file" accept=".pdf" />
+      <button class="btn" onclick="uploadPdf()">Upload resume.pdf</button>
+    </div>
+  </div>`;
+};
+
+window.addStatRow = () =>
+  $('#stat-rows').insertAdjacentHTML(
+    'beforeend',
+    `<div class="subrow-2 stat-row">
+      <input type="text" class="st-value mono" placeholder="value" />
+      <input type="text" class="st-label" placeholder="label" />
+      <button class="x-btn" onclick="this.closest('.stat-row').remove()">×</button>
+    </div>`,
+  );
+
+window.saveSettings = async () => {
+  const val = (id) => document.getElementById(id).value.trim();
+  const next = {
+    ...state.site,
+    name: val('s-name'),
+    siteUrl: val('s-siteUrl').replace(/\/$/, ''),
+    tagline: val('s-tagline'),
+    roleLine: val('s-roleLine'),
+    summary: val('s-summary'),
+    availability: val('s-availability'),
+    email: val('s-email'),
+    phone: val('s-phone'),
+    showPhone: document.getElementById('s-showPhone').checked,
+    location: val('s-location'),
+    social: { github: val('s-github'), linkedin: val('s-linkedin'), onshape: val('s-onshape') },
+    stats: [...document.querySelectorAll('.stat-row')]
+      .map((r) => ({
+        value: r.querySelector('.st-value').value.trim(),
+        label: r.querySelector('.st-label').value.trim(),
+      }))
+      .filter((st) => st.value || st.label),
+    analytics: { ...state.site.analytics, goatcounterCode: val('s-gc') },
+  };
+  try {
+    await api('PUT', '/api/site', next);
+    state.site = next;
+    toast('Settings saved ✓ — restart `npm run dev` if you changed the site URL');
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+
+window.uploadPdf = async () => {
+  const f = $('#pdf-file').files[0];
+  if (!f) return toast('Choose a PDF first', true);
+  try {
+    await api('POST', '/api/upload/resume-pdf', f, true);
+    toast('resume.pdf uploaded ✓');
+    await load();
+  } catch (e) {
+    toast(e.message, true);
+  }
+};
+
+// ---- metrics ----
+views.metrics = () => `
+  <h1>Metrics</h1>
+  <p class="sub">Traffic via <a href="https://www.goatcounter.com" target="_blank">GoatCounter</a> — free, privacy-friendly, no cookie banner needed.</p>
+  <div id="metrics-body" class="card" style="color:var(--faint)">Loading…</div>`;
+
+after.metrics = async () => {
+  const el = $('#metrics-body');
+  try {
+    const m = await api('GET', '/api/metrics');
+    if (!m.configured && m.reason === 'no-code') {
+      el.innerHTML = `
+        <b>Not set up yet.</b>
+        <div class="note"><ol>
+          <li>Create a free account at <a href="https://www.goatcounter.com" target="_blank">goatcounter.com</a> and pick a code (e.g. <code>jessekegley</code>).</li>
+          <li>Enter that code in <b>Settings → GoatCounter code</b> and save.</li>
+          <li>Rebuild & redeploy the site — the tracking script is added automatically.</li>
+          <li>(Optional) In GoatCounter: Settings → API → new token with <i>read statistics</i> permission, then paste it below to see stats here.</li>
+        </ol></div>
+        ${tokenForm()}`;
+    } else if (!m.configured && m.reason === 'no-token') {
+      el.innerHTML = `
+        <p style="margin:0">Tracking is configured for <a href="https://${esc(m.code)}.goatcounter.com" target="_blank"><code>${esc(m.code)}.goatcounter.com</code> ↗</a> — view full stats there.</p>
+        <div class="note">To see stats in this dashboard, create an API token in GoatCounter (Settings → API, <i>read statistics</i> permission) and paste it below. It's stored in <code>dashboard/secrets.json</code>, which is gitignored.</div>
+        ${tokenForm()}`;
+    } else {
+      el.innerHTML = `
+        <div class="grid cols-3" style="margin-bottom:1rem">
+          <div class="card"><div class="stat-num">${m.week.total ?? '—'}</div><div class="stat-label">pageviews, last 7 days</div></div>
+          <div class="card"><div class="stat-num">${m.month.total ?? '—'}</div><div class="stat-label">pageviews, last 30 days</div></div>
+          <div class="card"><div class="stat-num"><a href="https://${esc(m.code)}.goatcounter.com" target="_blank" style="font-size:1rem">Full dashboard ↗</a></div><div class="stat-label">${esc(m.code)}.goatcounter.com</div></div>
+        </div>
+        <h2 style="margin-top:0">Top pages (30 days)</h2>
+        <table>
+          <thead><tr><th>Path</th><th>Views</th></tr></thead>
+          <tbody>${(m.pages.hits ?? []).map((h) => `<tr><td><code>${esc(h.path)}</code></td><td>${h.count}</td></tr>`).join('') || '<tr><td colspan="2" style="color:var(--faint)">No data yet.</td></tr>'}</tbody>
+        </table>
+        <div class="note">Note: GoatCounter ignores localhost visits by default — numbers only move on the deployed site.</div>
+        ${tokenForm()}`;
+    }
+  } catch (e) {
+    el.innerHTML = `<b style="color:#c92a2a">Couldn't fetch metrics:</b> ${esc(e.message)}${tokenForm()}`;
+  }
+};
+
+function tokenForm() {
+  return `
+    <div class="actions">
+      <input type="text" id="gc-token" class="mono" placeholder="${state.hasGoatcounterToken ? 'Token saved — paste to replace' : 'GoatCounter API token (optional)'}" style="max-width:420px" />
+      <button class="ghost" onclick="saveToken()">Save token</button>
+    </div>`;
+}
+window.saveToken = async () => {
+  const token = $('#gc-token').value.trim();
+  if (!token) return toast('Paste a token first', true);
+  await api('PUT', '/api/secrets', { goatcounterToken: token });
+  toast('Token saved ✓');
+  await load();
+  setTab('metrics');
+};
+
+load().catch((e) => {
+  $('#main').innerHTML = `<h1>Couldn't load</h1><p>${esc(e.message)}</p>`;
+});
+</script>
+</body>
+</html>

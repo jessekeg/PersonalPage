@@ -1,0 +1,26 @@
+{
+  "name": "Jesse Kegley",
+  "siteUrl": "",
+  "tagline": "Robotics · Embedded Systems · Fabrication",
+  "roleLine": "Robotics Engineering student at UC Santa Cruz, automation intern at a rocket startup, and certified aerospace TIG welder.",
+  "summary": "I design, build, and program electromechanical systems, from raw stock to closed-loop control. Before robotics school I welded for a living, and I still run the fabrication business I started in 2022.",
+  "availability": "Open to internships in embedded systems, controls, mechatronics, and manufacturing engineering.",
+  "email": "jkegley@ucsc.edu",
+  "phone": "(443) 818-2095",
+  "showPhone": false,
+  "location": "Santa Cruz, CA",
+  "social": {
+    "github": "",
+    "linkedin": "",
+    "onshape": ""
+  },
+  "stats": [
+    { "value": "6+ yrs", "label": "professional fabrication & welding experience" },
+    { "value": "2", "label": "American Welding Society certs — aerospace TIG (D17.1) & structural stick (D1.5)" },
+    { "value": "20 kHz", "label": "field-oriented control loop, written from scratch in bare-metal C" }
+  ],
+  "analytics": {
+    "provider": "goatcounter",
+    "goatcounterCode": ""
+  }
+}

@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Not found">
+  <section class="section">
+    <div class="container nf">
+      <p class="kicker">404</p>
+      <h1>Page not found</h1>
+      <p>Looks like this part didn't make it through QC.</p>
+      <a class="btn" href="/">Back to home</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    text-align: center;
+    padding-block: 4rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.8rem;
+  }
+
+  p {
+    color: var(--ink-soft);
+    margin-bottom: 1.8rem;
+  }
+
+  .kicker {
+    justify-content: center;
+  }
+
+  .kicker::after {
+    display: none;
+  }
+</style>

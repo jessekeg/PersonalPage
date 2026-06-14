@@ -1,0 +1,360 @@
+/* ============================================================
+   Design tokens — edit these to retheme the whole site.
+   ============================================================ */
+:root {
+  --bg: #faf9f6;
+  --bg-raised: #ffffff;
+  --bg-inset: #f1efe9;
+  --ink: #191b1f;
+  --ink-soft: #565b63;
+  --ink-faint: #8b8f97;
+  --line: #e4e1d8;
+  --line-strong: #c8c4b8;
+  --accent: #c2410c;
+  --accent-soft: rgba(194, 65, 12, 0.08);
+  --accent-contrast: #ffffff;
+
+  --font-display: 'Space Grotesk Variable', system-ui, sans-serif;
+  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --radius: 6px;
+  --container: 1100px;
+  --shadow: 0 1px 2px rgba(20, 18, 12, 0.04), 0 8px 24px rgba(20, 18, 12, 0.06);
+}
+
+[data-theme='dark'] {
+  --bg: #101214;
+  --bg-raised: #16191c;
+  --bg-inset: #1d2125;
+  --ink: #eae9e4;
+  --ink-soft: #a2a6ad;
+  --ink-faint: #70747b;
+  --line: #272b30;
+  --line-strong: #3d424a;
+  --accent: #fb923c;
+  --accent-soft: rgba(251, 146, 60, 0.1);
+  --accent-contrast: #1c1106;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* ============================================================
+   Layout utilities
+   ============================================================ */
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+.section {
+  padding-block: clamp(3rem, 7vw, 4.75rem);
+}
+
+.section + .section {
+  border-top: 1px solid var(--line);
+}
+
+/* Mono uppercase label, e.g. "01 / Projects" */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.kicker::after {
+  content: '';
+  height: 1px;
+  width: 2.5rem;
+  background: var(--line-strong);
+}
+
+/* Subtle blueprint dot grid for hero areas */
+.dot-grid {
+  background-image: radial-gradient(var(--line-strong) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 90%);
+  mask-image: linear-gradient(to bottom, black 0%, transparent 90%);
+}
+
+/* ============================================================
+   Buttons, tags, badges
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.65rem 1.2rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  padding: 0.22rem 0.55rem;
+  border-radius: 4px;
+  background: var(--bg-inset);
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ============================================================
+   Card with machined corner marks
+   ============================================================ */
+.card {
+  position: relative;
+  display: block;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  pointer-events: none;
+}
+
+.card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+}
+
+.card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+}
+
+a.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+}
+
+a.card:hover::before,
+a.card:hover::after {
+  opacity: 1;
+}
+
+/* ============================================================
+   Prose (rendered markdown)
+   ============================================================ */
+.prose {
+  max-width: 70ch;
+  font-size: 1.04rem;
+}
+
+.prose h2 {
+  font-size: 1.45rem;
+  margin: 2.4rem 0 0.9rem;
+}
+
+.prose h3 {
+  font-size: 1.15rem;
+  margin: 1.8rem 0 0.7rem;
+}
+
+.prose p {
+  margin: 0 0 1.1rem;
+  color: var(--ink-soft);
+}
+
+.prose strong {
+  color: var(--ink);
+}
+
+.prose ul, .prose ol {
+  margin: 0 0 1.1rem;
+  padding-left: 1.4rem;
+  color: var(--ink-soft);
+}
+
+.prose li {
+  margin-bottom: 0.45rem;
+}
+
+.prose li::marker {
+  color: var(--accent);
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.prose pre {
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  margin: 0 0 1.1rem;
+}
+
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* Figures: a markdown image, optionally followed by an italic caption line */
+.prose img {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  margin: 1.6rem auto 0;
+}
+
+.prose p:has(> img:only-child) {
+  margin-bottom: 0.5rem;
+}
+
+.prose p:has(> img:only-child) + p:has(> em:only-child) {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+.prose p:has(> img:only-child) + p:has(> em:only-child) em {
+  font-style: normal;
+}
+
+.prose blockquote {
+  margin: 0 0 1.1rem;
+  padding: 0.2rem 0 0.2rem 1.1rem;
+  border-left: 2px solid var(--accent);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
+}
+
+.prose em {
+  color: var(--ink-soft);
+}

@@ -1,0 +1,105 @@
+---
+import site from '../data/site.json';
+
+const year = new Date().getFullYear();
+const socials = [
+  { key: 'github', label: 'GitHub', url: site.social.github },
+  { key: 'linkedin', label: 'LinkedIn', url: site.social.linkedin },
+  { key: 'onshape', label: 'Onshape', url: site.social.onshape },
+].filter((s) => s.url);
+---
+
+<footer>
+  <section class="contact-band" id="contact">
+    <div class="container contact-inner">
+      <div>
+        <p class="kicker">Contact</p>
+        <h2>Get in touch</h2>
+        <p class="availability">{site.availability}</p>
+      </div>
+      <div class="contact-actions">
+        <a class="btn" href={`mailto:${site.email}`}>{site.email}</a>
+        {site.showPhone && <span class="phone">{site.phone}</span>}
+      </div>
+    </div>
+  </section>
+  <div class="footer-bottom">
+    <div class="container footer-row">
+      <span>© {year} {site.name} · {site.location}</span>
+      <span class="footer-links">
+        <a href="/fabrication/">Fabrication</a>
+        {socials.map((s) => (
+          <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+        ))}
+        <span class="built-with">Built with Astro</span>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .contact-band {
+    border-top: 1px solid var(--line);
+    background: var(--bg-inset);
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .contact-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+  }
+
+  .contact-band h2 {
+    font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .availability {
+    color: var(--ink-soft);
+    max-width: 46ch;
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .phone {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid var(--line);
+    padding-block: 1.2rem;
+  }
+
+  .footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  .footer-links a {
+    color: var(--ink-soft);
+  }
+
+  .footer-links a:hover {
+    color: var(--accent);
+  }
+</style>

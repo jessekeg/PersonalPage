@@ -1,0 +1,208 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+// Drafts are visible in `npm run dev` (with a badge) but excluded from builds.
+const projects = (
+  await getCollection('projects', ({ data }) => import.meta.env.DEV || !data.draft)
+).sort((a, b) => b.data.sortDate.valueOf() - a.data.sortDate.valueOf());
+
+// Writing lives alongside projects rather than in its own nav section: most
+// writeups document a project, so they read better right below the work.
+const papers = (await getCollection('papers')).sort(
+  (a, b) => b.data.sortDate.valueOf() - a.data.sortDate.valueOf(),
+);
+const publishedPapers = papers.filter((p) => !p.data.draft);
+const inProgressPapers = papers.filter((p) => p.data.draft);
+---
+
+<Base title="Projects" description="Engineering projects by Jesse Kegley — motor control, mechatronics, robotics, and product design.">
+  <section class="section">
+    <div class="container">
+      <p class="kicker">Portfolio</p>
+      <h1>Projects</h1>
+      <p class="lede">
+        A mix of course projects, personal builds, and product work. Most of them involve mechanism
+        design, electronics, and firmware in the same build.
+      </p>
+      <div class="project-grid">
+        {projects.map((p, i) => <ProjectCard project={p} index={i} />)}
+      </div>
+
+      {
+        (publishedPapers.length > 0 || inProgressPapers.length > 0) && (
+          <div class="writing" id="writing">
+            <p class="kicker">Writing & reports</p>
+            <p class="writing-lede">
+              Longer-form documentation behind the projects — design rationale, analysis, and
+              measured results.
+            </p>
+
+            {publishedPapers.length > 0 && (
+              <div class="paper-list">
+                {publishedPapers.map((p) => (
+                  <article class="paper-row">
+                    <div class="paper-meta">
+                      <span class="date">{p.data.date}</span>
+                      {p.data.venue && <span class="venue">{p.data.venue}</span>}
+                    </div>
+                    <h3>{p.data.title}</h3>
+                    <p class="summary">{p.data.summary}</p>
+                    <div class="paper-links">
+                      {p.data.pdf && (
+                        <a class="btn btn-ghost btn-sm" href={p.data.pdf}>
+                          Read PDF ↓
+                        </a>
+                      )}
+                      {p.data.link && (
+                        <a
+                          class="btn btn-ghost btn-sm"
+                          href={p.data.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View ↗
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {inProgressPapers.length > 0 && (
+              <div class="upcoming">
+                {inProgressPapers.map((p) => (
+                  <div class="upcoming-row">
+                    <span class="badge">In the works</span>
+                    <div>
+                      <p class="upcoming-title">{p.data.title}</p>
+                      {p.data.venue && <p class="upcoming-venue">{p.data.venue}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.8rem;
+  }
+
+  .lede {
+    color: var(--ink-soft);
+    max-width: 58ch;
+    margin-bottom: 2.5rem;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.2rem;
+  }
+
+  /* ---- writing ---- */
+  .writing {
+    margin-top: 3.5rem;
+    border-top: 1px solid var(--line);
+    padding-top: 2.2rem;
+  }
+
+  .writing-lede {
+    color: var(--ink-soft);
+    max-width: 58ch;
+    margin-bottom: 1.8rem;
+  }
+
+  .paper-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    max-width: 760px;
+  }
+
+  .paper-row {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1.6rem;
+  }
+
+  .paper-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .paper-meta {
+    display: flex;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .paper-meta .date {
+    color: var(--accent);
+  }
+
+  .paper-meta .venue {
+    color: var(--ink-faint);
+  }
+
+  .paper-row h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .paper-row .summary {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin-bottom: 0.9rem;
+    max-width: 64ch;
+  }
+
+  .paper-links {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .btn-sm {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.85rem;
+  }
+
+  .upcoming {
+    max-width: 760px;
+  }
+
+  .upcoming-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .upcoming-row:first-of-type {
+    border-top: 1px solid var(--line);
+  }
+
+  .upcoming-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.98rem;
+  }
+
+  .upcoming-venue {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    margin-top: 0.15rem;
+  }
+</style>

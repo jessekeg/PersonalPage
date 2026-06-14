@@ -1,0 +1,112 @@
+{
+  "summary": "Robotics Engineering student with a professional fabrication background — certified aerospace TIG welder, machine shop owner, and automation intern at a rocket startup — who designs, builds, and programs complete electromechanical systems from raw stock to closed-loop control.",
+  "education": [
+    {
+      "school": "University of California, Santa Cruz",
+      "location": "Santa Cruz, CA",
+      "degree": "B.S. Robotics Engineering, Minor in Electrical Engineering",
+      "dates": "Sep 2023 – Jun 2027 (expected)",
+      "details": [
+        "Relevant coursework: ECE 118 Mechatronics"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "company": "Boncu-Space LLC",
+      "title": "Automation / Aerospace Engineering Intern",
+      "location": "Santa Cruz, CA",
+      "dates": "Sep 2025 – Present",
+      "bullets": [
+        "Designing and manufacturing technologies to optimize cost per unit payload weight of medium-sized rockets.",
+        "Creating, testing, and iterating automated systems for fixturing and laser welding of thrust chamber assemblies and fuel tanks.",
+        "Designed and fabricated a gas piston for the automation system providing constant force, smooth travel, and backpurge gas flow across a 42–75 mm length range at a total unit cost under $1.50."
+      ]
+    },
+    {
+      "company": "Kegley Metalwork LLC",
+      "title": "Owner / Operator",
+      "location": "Severna Park, MD",
+      "dates": "Jul 2022 – Present",
+      "bullets": [
+        "Founded and operate a business providing welding and fabrication services for equipment repair and commercial business solutions.",
+        "Scope, quote, and deliver projects across multiple industries; full responsibility for pricing, client communication, and project execution.",
+        "Maintain, modify, and service all shop equipment, including during ongoing projects, to ensure reliable delivery."
+      ]
+    },
+    {
+      "company": "HARE Research Lab, UC Santa Cruz",
+      "title": "Research Assistant",
+      "location": "Santa Cruz, CA",
+      "dates": "Dec 2024 – Jul 2025",
+      "bullets": [
+        "Contributed mechanical and technical work — CNC machining, CAD, soldering, electronics, and programming — toward development of a VTOL search-and-rescue drone."
+      ]
+    },
+    {
+      "company": "VHF Welding",
+      "title": "Project Estimator",
+      "location": "Capitola, CA",
+      "dates": "Jan 2024 – Aug 2024",
+      "bullets": [
+        "Created accurate bids on large fabrication projects worth upwards of $40,000, securing work for a local welding business."
+      ]
+    },
+    {
+      "company": "Harbor Diving Services",
+      "title": "Freelance Welder / Assistant",
+      "location": "Edgewater, MD",
+      "dates": "May 2020 – Sep 2023",
+      "bullets": [
+        "Assisted in commercial diving and underwater welding operations; set up and operated diver communication systems to ensure safe dives and accurate information transmission to customers."
+      ]
+    },
+    {
+      "company": "JCM Associates",
+      "title": "Welder / Steamfitter",
+      "location": "Washington, DC",
+      "dates": "Nov 2022 – Sep 2023",
+      "bullets": [
+        "Maintained fleet machines and equipment used on multimillion-dollar mechanical contracting jobs.",
+        "Read technical drawings to fabricate components for on-site installation.",
+        "Designed and fabricated shop systems and fixtures that improved productivity."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "group": "Programming",
+      "items": ["C", "C++", "Python", "MATLAB", "JavaScript", "RISC-V assembly", "Verilog", "Embedded Rust"]
+    },
+    {
+      "group": "Embedded",
+      "items": ["STM32 (bare-metal C)", "ESP32 / ESP-IDF / ESP-NOW", "PIC32 (Uno32)", "FreeRTOS", "ROS", "Real-time control loops", "Timer-triggered & injected ADC, PWM", "UART / I2C", "Telemetry & data logging", "PlatformIO"]
+    },
+    {
+      "group": "Controls",
+      "items": ["Field-oriented control (Clarke/Park, SVPWM)", "Cascaded PI loop design & tuning", "Encoder calibration & filtering", "Motor characterization", "Commutation theory"]
+    },
+    {
+      "group": "Electronics",
+      "items": ["Analog design: op-amps, instrumentation amps, active filters", "High-side bidirectional current sensing", "KiCad", "Breadboard & perfboard prototyping", "Bench instrumentation (scope, DMM)", "Least-squares sensor calibration"]
+    },
+    {
+      "group": "Design & Manufacturing",
+      "items": ["Onshape", "Fusion 360 + CAM", "CNC & manual machining", "3D printing & design for printing", "Welding (AWS-certified TIG & stick)", "Soldering", "Fixture design", "Fabrication from technical drawings (GD&T)"]
+    },
+    {
+      "group": "Tools",
+      "items": ["Git", "Linux", "Docker", "Node.js"]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Stick (SMAW) — D1.5 Structural Steel (bridge code)",
+      "issuer": "American Welding Society"
+    },
+    {
+      "name": "TIG (GTAW) — D17.1 Aerospace: steel, stainless, aluminum",
+      "issuer": "American Welding Society"
+    }
+  ]
+}

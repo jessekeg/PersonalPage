@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+import fab from '../data/fabrication.json';
+import resume from '../data/resume.json';
+
+const gallery = fab.gallery ?? [];
+const certs = resume.certifications ?? [];
+---
+
+<Base
+  title="Fabrication & Welding"
+  description="Welding and fabrication work by Jesse Kegley — certified aerospace TIG and structural stick, plus shop and side-project builds."
+>
+  <section class="section">
+    <div class="container">
+      <p class="kicker">Trade work</p>
+      <h1>{fab.title}</h1>
+      <p class="lede">{fab.intro}</p>
+
+      {
+        certs.length > 0 && (
+          <div class="certs">
+            {certs.map((c) => (
+              <div class="cert">
+                <span class="cert-mark">AWS</span>
+                <div>
+                  <p class="cert-name">{c.name}</p>
+                  <p class="cert-issuer">{c.issuer}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        gallery.length > 0 ? (
+          <div class="gallery">
+            {gallery.map((g) => (
+              <figure class="shot">
+                <img src={g.image} alt={g.caption ?? 'Fabrication work'} loading="lazy" />
+                {g.caption && <figcaption>{g.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        ) : (
+          <p class="empty">
+            Photos of recent shop work are on the way. In the meantime, the welding and fabrication
+            experience is detailed on the <a href="/resume/">résumé</a>.
+          </p>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.8rem;
+  }
+
+  .lede {
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin-bottom: 2rem;
+  }
+
+  .certs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2.8rem;
+  }
+
+  .cert {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.7rem 1rem;
+    background: var(--bg-inset);
+  }
+
+  .cert-mark {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 0.2rem 0.35rem;
+  }
+
+  .cert-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .cert-issuer {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    margin-top: 0.1rem;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .shot {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-inset);
+  }
+
+  .shot img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .shot figcaption {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    padding: 0.7rem 0.9rem;
+  }
+
+  .empty {
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    padding-top: 1.6rem;
+    max-width: 56ch;
+  }
+</style>

@@ -1,0 +1,28 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# environment / local secrets — never commit these
+.env
+.env.*
+*.local
+dashboard/secrets.json
+
+# Claude Code project files — kept locally, not published to the repo
+CLAUDE.md
+.claude/
+
+# machine-local editor / tooling config
+.vscode/
+.idea/
+
+# macOS
+.DS_Store

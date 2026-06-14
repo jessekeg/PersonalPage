@@ -1,0 +1,263 @@
+---
+import { existsSync } from 'node:fs';
+import Base from '../layouts/Base.astro';
+import site from '../data/site.json';
+import resume from '../data/resume.json';
+
+// Show the download button only once a PDF has been uploaded (dashboard → Settings).
+const hasPdf = existsSync(new URL('../../public/resume.pdf', import.meta.url));
+---
+
+<Base title="Résumé" description={resume.summary}>
+  <section class="section">
+    <div class="container resume-grid">
+      <div class="main-col">
+        <header class="resume-header">
+          <p class="kicker">Résumé</p>
+          <h1>{site.name}</h1>
+          <p class="summary">{resume.summary}</p>
+          <div class="header-actions">
+            {hasPdf && <a class="btn" href="/resume.pdf" download>Download PDF ↓</a>}
+            <a class="btn btn-ghost" href={`mailto:${site.email}`}>{site.email}</a>
+          </div>
+        </header>
+
+        <section class="resume-section">
+          <h2 class="kicker">Education</h2>
+          {
+            resume.education.map((ed) => (
+              <div class="entry">
+                <div class="entry-head">
+                  <div>
+                    <h3>{ed.school}</h3>
+                    <p class="entry-sub">{ed.degree}</p>
+                  </div>
+                  <div class="entry-right">
+                    <span class="dates">{ed.dates}</span>
+                    <span class="loc">{ed.location}</span>
+                  </div>
+                </div>
+                {ed.details.length > 0 && (
+                  <ul>
+                    {ed.details.map((d) => (
+                      <li>{d}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))
+          }
+        </section>
+
+        <section class="resume-section">
+          <h2 class="kicker">Experience</h2>
+          {
+            resume.experience.map((e) => (
+              <div class="entry">
+                <div class="entry-head">
+                  <div>
+                    <h3>{e.title}</h3>
+                    <p class="entry-sub">{e.company}</p>
+                  </div>
+                  <div class="entry-right">
+                    <span class="dates">{e.dates}</span>
+                    <span class="loc">{e.location}</span>
+                  </div>
+                </div>
+                <ul>
+                  {e.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </section>
+      </div>
+
+      <aside class="side-col">
+        <section class="resume-section">
+          <h2 class="kicker">Skills</h2>
+          {
+            resume.skills.map((g) => (
+              <div class="skill-group">
+                <p class="skill-label">{g.group}</p>
+                <div class="skill-tags">
+                  {g.items.map((item) => (
+                    <span class="tag">{item}</span>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </section>
+
+        <section class="resume-section">
+          <h2 class="kicker">Certifications</h2>
+          {
+            resume.certifications.map((c) => (
+              <div class="cert card">
+                <p class="cert-name">{c.name}</p>
+                <p class="cert-issuer">{c.issuer}</p>
+              </div>
+            ))
+          }
+        </section>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .resume-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .resume-header {
+    margin-bottom: 2.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    margin-bottom: 0.8rem;
+  }
+
+  .summary {
+    color: var(--ink-soft);
+    margin-bottom: 1.4rem;
+    max-width: 60ch;
+  }
+
+  .header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .resume-section {
+    margin-bottom: 2.6rem;
+  }
+
+  .resume-section > .kicker {
+    margin-bottom: 1.4rem;
+  }
+
+  .entry {
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.8rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .entry:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .entry h3 {
+    font-size: 1.08rem;
+  }
+
+  .entry-sub {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin-top: 0.15rem;
+  }
+
+  .entry-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .dates,
+  .loc {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .entry ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+
+  .entry li {
+    margin-bottom: 0.4rem;
+  }
+
+  .entry li::marker {
+    color: var(--accent);
+  }
+
+  .skill-group {
+    margin-bottom: 1.3rem;
+  }
+
+  .skill-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 0.5rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .skill-tags .tag {
+    white-space: normal;
+  }
+
+  .cert {
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .cert-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .cert-issuer {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    margin-top: 0.3rem;
+  }
+
+  @media (max-width: 860px) {
+    .resume-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .entry-right {
+      align-items: flex-start;
+    }
+
+    .entry-head {
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+  }
+</style>
