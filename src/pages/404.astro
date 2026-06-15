@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/url';
 ---
 
 <Base title="Not found">
@@ -8,7 +9,7 @@ import Base from '../layouts/Base.astro';
       <p class="kicker">404</p>
       <h1>Page not found</h1>
       <p>Looks like this part didn't make it through QC.</p>
-      <a class="btn" href="/">Back to home</a>
+      <a class="btn" href={withBase('/')}>Back to home</a>
     </div>
   </section>
 </Base>

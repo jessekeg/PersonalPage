@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../lib/url';
+
 interface Props {
   kicker: string;
   title: string;
@@ -16,7 +18,7 @@ const { kicker, title, moreHref, moreLabel = 'View all' } = Astro.props;
   </div>
   {
     moreHref && (
-      <a class="more" href={moreHref}>
+      <a class="more" href={withBase(moreHref)}>
         {moreLabel} <span aria-hidden="true">→</span>
       </a>
     )

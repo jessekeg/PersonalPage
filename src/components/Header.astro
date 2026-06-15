@@ -1,5 +1,6 @@
 ---
 import site from '../data/site.json';
+import { withBase } from '../lib/url';
 
 const links = [
   { href: '/projects/', label: 'Projects' },
@@ -7,19 +8,23 @@ const links = [
 ];
 
 const path = Astro.url.pathname;
-const isActive = (href: string) => path === href || path.startsWith(href);
+// Astro.url.pathname includes the base path, so compare against the based href.
+const isActive = (href: string) => {
+  const h = withBase(href);
+  return path === h || path.startsWith(h);
+};
 ---
 
 <header class="site-header">
   <div class="container header-row">
-    <a class="brand" href="/">
+    <a class="brand" href={withBase('/')}>
       <span class="brand-mark">JK</span>
       <span class="brand-name">{site.name}</span>
     </a>
     <nav aria-label="Main">
       {
         links.map((l) => (
-          <a href={l.href} class:list={['nav-link', { active: isActive(l.href) }]}>
+          <a href={withBase(l.href)} class:list={['nav-link', { active: isActive(l.href) }]}>
             {l.label}
           </a>
         ))

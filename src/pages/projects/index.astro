@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import { withBase } from '../../lib/url';
 
 // Drafts are visible in `npm run dev` (with a badge) but excluded from builds.
 const projects = (
@@ -51,7 +52,7 @@ const inProgressPapers = papers.filter((p) => p.data.draft);
                     <p class="summary">{p.data.summary}</p>
                     <div class="paper-links">
                       {p.data.pdf && (
-                        <a class="btn btn-ghost btn-sm" href={p.data.pdf}>
+                        <a class="btn btn-ghost btn-sm" href={withBase(p.data.pdf)}>
                           Read PDF ↓
                         </a>
                       )}

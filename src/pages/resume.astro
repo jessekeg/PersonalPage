@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import Base from '../layouts/Base.astro';
 import site from '../data/site.json';
 import resume from '../data/resume.json';
+import { withBase } from '../lib/url';
 
 // Show the download button only once a PDF has been uploaded (dashboard → Settings).
 const hasPdf = existsSync(new URL('../../public/resume.pdf', import.meta.url));
@@ -17,7 +18,7 @@ const hasPdf = existsSync(new URL('../../public/resume.pdf', import.meta.url));
           <h1>{site.name}</h1>
           <p class="summary">{resume.summary}</p>
           <div class="header-actions">
-            {hasPdf && <a class="btn" href="/resume.pdf" download>Download PDF ↓</a>}
+            {hasPdf && <a class="btn" href={withBase('/resume.pdf')} download>Download PDF ↓</a>}
             <a class="btn btn-ghost" href={`mailto:${site.email}`}>{site.email}</a>
           </div>
         </header>

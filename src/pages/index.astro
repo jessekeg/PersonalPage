@@ -5,6 +5,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import site from '../data/site.json';
 import resume from '../data/resume.json';
+import { withBase } from '../lib/url';
 
 const featured = (await getCollection('projects', ({ data }) => data.featured && !data.draft))
   .sort((a, b) => b.data.sortDate.valueOf() - a.data.sortDate.valueOf());
@@ -35,8 +36,8 @@ const personLd = JSON.stringify({
       <p class="role-line">{site.roleLine}</p>
       <p class="hero-summary">{site.summary}</p>
       <div class="hero-actions">
-        <a class="btn" href="/projects/">View projects</a>
-        <a class="btn btn-ghost" href="/resume/">Résumé</a>
+        <a class="btn" href={withBase('/projects/')}>View projects</a>
+        <a class="btn btn-ghost" href={withBase('/resume/')}>Résumé</a>
       </div>
       <dl class="stats">
         {
@@ -71,7 +72,7 @@ const personLd = JSON.stringify({
         <SectionHeading kicker="02 / About" title="From raw stock to closed-loop control" />
         <p class="about-text">
           I came to engineering through the trades. I was welding professionally before I started
-          my robotics degree at UC Santa Cruz, and I've run my own <a href="/fabrication/">fabrication
+          my robotics degree at UC Santa Cruz, and I've run my own <a href={withBase('/fabrication/')}>fabrication
           and welding</a> business, Kegley Metalwork, since 2022.
         </p>
         <p class="about-text">
@@ -101,7 +102,7 @@ const personLd = JSON.stringify({
                   <span class="tag">{item}</span>
                 ))}
                 {g.items.length > 7 && (
-                  <a class="tag tag-more" href="/resume/">
+                  <a class="tag tag-more" href={withBase('/resume/')}>
                     +{g.items.length - 7} more
                   </a>
                 )}
@@ -124,7 +125,7 @@ const personLd = JSON.stringify({
       <div class="exp-list">
         {
           recentExperience.map((e) => (
-            <a class="exp-row" href="/resume/">
+            <a class="exp-row" href={withBase('/resume/')}>
               <span class="exp-dates">{e.dates}</span>
               <span class="exp-main">
                 <span class="exp-title">{e.title}</span>

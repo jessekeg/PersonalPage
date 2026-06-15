@@ -1,5 +1,6 @@
 ---
 import site from '../data/site.json';
+import { withBase } from '../lib/url';
 
 const year = new Date().getFullYear();
 const socials = [
@@ -27,7 +28,7 @@ const socials = [
     <div class="container footer-row">
       <span>© {year} {site.name} · {site.location}</span>
       <span class="footer-links">
-        <a href="/fabrication/">Fabrication</a>
+        <a href={withBase('/fabrication/')}>Fabrication</a>
         {socials.map((s) => (
           <a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
         ))}

@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CadViewer from '../../components/CadViewer.astro';
 import OnshapeEmbed from '../../components/OnshapeEmbed.astro';
+import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
   const projects = await getCollection(
@@ -24,7 +25,7 @@ const { title, summary, date, role, tags, status, draft, repo, highlights, cad }
   <article class="section">
     <div class="container">
       <header class="project-header">
-        <a class="back" href="/projects/">← All projects</a>
+        <a class="back" href={withBase('/projects/')}>← All projects</a>
         <div class="meta-row">
           <span class="date">{date}</span>
           {status === 'in-progress' && <span class="badge">Work in progress</span>}
@@ -68,7 +69,7 @@ const { title, summary, date, role, tags, status, draft, repo, highlights, cad }
             <p class="kicker">CAD</p>
             {cad.map((c) =>
               c.kind === 'stl' ? (
-                <CadViewer src={c.src} title={c.title} caption={c.caption} />
+                <CadViewer src={withBase(c.src)} title={c.title} caption={c.caption} />
               ) : (
                 <OnshapeEmbed src={c.src} title={c.title} caption={c.caption} />
               ),

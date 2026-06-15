@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -11,7 +12,7 @@ const { title, summary, date, tags, status, draft } = project.data;
 const num = String(index + 1).padStart(2, '0');
 ---
 
-<a class="card project-card" href={`/projects/${project.id}/`}>
+<a class="card project-card" href={withBase(`/projects/${project.id}/`)}>
   <div class="card-top">
     <span class="num">{num}</span>
     <span class="date">{date}</span>

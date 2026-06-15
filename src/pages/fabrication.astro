@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import fab from '../data/fabrication.json';
 import resume from '../data/resume.json';
+import { withBase } from '../lib/url';
 
 const gallery = fab.gallery ?? [];
 const certs = resume.certifications ?? [];
@@ -38,7 +39,7 @@ const certs = resume.certifications ?? [];
           <div class="gallery">
             {gallery.map((g) => (
               <figure class="shot">
-                <img src={g.image} alt={g.caption ?? 'Fabrication work'} loading="lazy" />
+                <img src={withBase(g.image)} alt={g.caption ?? 'Fabrication work'} loading="lazy" />
                 {g.caption && <figcaption>{g.caption}</figcaption>}
               </figure>
             ))}
@@ -46,7 +47,7 @@ const certs = resume.certifications ?? [];
         ) : (
           <p class="empty">
             Photos of recent shop work are on the way. In the meantime, the welding and fabrication
-            experience is detailed on the <a href="/resume/">résumé</a>.
+            experience is detailed on the <a href={withBase('/resume/')}>résumé</a>.
           </p>
         )
       }
