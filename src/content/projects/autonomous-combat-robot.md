@@ -1,21 +1,21 @@
 ---
-title: "Autonomous Combat Robot"
-summary: "An autonomous robot that finds opposing robots by their IR beacons and shoots ping-pong balls at them, built for head-to-head matches in ECE 118 Mechatronics."
+title: "ECE118 Robot"
+summary: "An autonomous robot that finds opposing robots by their IR beacons and shoots ping-pong balls at them, built for ECE118, a mechatronics course."
 date: "Spring 2026"
 sortDate: 2026-06-01
 status: in-progress
 featured: true
 draft: false
-role: "Team of 3 (with Logan Dustin and Akiva Covner) — ECE 118 Mechatronics, UC Santa Cruz"
+role: "Mechanical and Electrical"
 tags: ["Mechatronics", "Embedded C", "Sensors", "Autonomy", "Analog Filters", "KiCad", "State Machines"]
 highlights:
-  - "Eight-channel lensed IR detector array tracked the 2 kHz enemy beacon from under 1 ft to 16 ft with no dead zones, while rejecting 1.5 kHz and 2.5 kHz decoy beacons"
-  - "Fully autonomous on a Uno32: orientation, tape-line navigation, bump recovery, and turret aiming with no human input"
+  - "Seven channel lensed IR detector array tracked the 2 kHz enemy beacon landing accurate shots from under 1 ft to 16 ft, while rejecting 1.5 kHz and 2.5 kHz decoy beacons"
+  - "Fully autonomous robot after startup within match constraints"
   - "Whole robot built for $122.36 of a $150 budget, heavy on salvage and laser-cut plywood"
 cad: []
 ---
 
-For ECE 118, our team of three designed and built an autonomous robot for head-to-head course matches: two robots on the field at once, two minutes on the clock, each trying to hit the other with a ping-pong ball. Everything fits in an 11″ × 11″ × 11″ envelope and runs with no human input after the start.
+In ECE118 (Intro to Mechatronics, a capstone style robotics course at UCSC), we spent five weeks designing, and building a robot in order to compete in a tournament-style competition at the end of finals week. Our final bot passed the minimum specification for the competition, and made it to semi-finals in the competition. 
 
 ![Assembled robot on the bench](/images/robot/bot-assembled.jpg)
 

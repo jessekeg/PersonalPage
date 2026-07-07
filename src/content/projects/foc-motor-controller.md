@@ -9,10 +9,9 @@ draft: false
 role: "Partner project (team of 2) — ECE course project, UC Santa Cruz"
 tags: ["STM32", "Bare-metal C", "FOC", "Analog Design", "Control Systems", "PlatformIO"]
 highlights:
-  - "20 kHz inner current loop (Id/Iq PI regulation) with a 500 Hz outer position loop, speed damping, and integral action"
-  - "Three-stage high-side bidirectional current-sense amplifier: instrumentation amp, gain/low-pass stage, buffered level shifter into the STM32 ADC's 0–3.3 V range"
+  - "Fully analog current-sense amplifier circuit built with through hole components readily available at the UCSC parts window."
+  - "Field oriented control software library written and tested from scratch on nucleo board."
   - "Current sampling synchronized to the PWM carrier via TIM1-triggered injected ADC conversions at 20 kHz"
-  - "Held a 200 mL load at 9.5 in vs. 7.5 in for the encoder-only baseline"
 cad: []
 ---
 

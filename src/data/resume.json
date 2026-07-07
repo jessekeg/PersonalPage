@@ -7,7 +7,7 @@
       "degree": "B.S. Robotics Engineering, Minor in Electrical Engineering",
       "dates": "Sep 2023 – Jun 2027 (expected)",
       "details": [
-        "Relevant coursework: ECE 118 Mechatronics"
+        "Relevant coursework: ECE 118 Mechatronics, ECE 121: Microcontroller System Design, ECE 167: Sensors and Sensor Technologies, ECE 100: Logic Design in Verilog, ECE 171: Analog Circuits"
       ]
     }
   ],
@@ -76,27 +76,74 @@
   "skills": [
     {
       "group": "Programming",
-      "items": ["C", "C++", "Python", "MATLAB", "JavaScript", "RISC-V assembly", "Verilog", "Embedded Rust"]
+      "items": [
+        "C",
+        "C++",
+        "Python",
+        "MATLAB",
+        "JavaScript",
+        "RISC-V assembly",
+        "Verilog",
+        "Embedded Rust"
+      ]
     },
     {
       "group": "Embedded",
-      "items": ["STM32 (bare-metal C)", "ESP32 / ESP-IDF / ESP-NOW", "PIC32 (Uno32)", "FreeRTOS", "ROS", "Real-time control loops", "Timer-triggered & injected ADC, PWM", "UART / I2C", "Telemetry & data logging", "PlatformIO"]
+      "items": [
+        "STM32 (bare-metal C)",
+        "ESP32 / ESP-IDF / ESP-NOW",
+        "PIC32 (Uno32)",
+        "FreeRTOS",
+        "ROS",
+        "Real-time control loops",
+        "Timer-triggered & injected ADC, PWM",
+        "UART / I2C",
+        "Telemetry & data logging",
+        "PlatformIO"
+      ]
     },
     {
       "group": "Controls",
-      "items": ["Field-oriented control (Clarke/Park, SVPWM)", "Cascaded PI loop design & tuning", "Encoder calibration & filtering", "Motor characterization", "Commutation theory"]
+      "items": [
+        "Field-oriented control (Clarke/Park, SVPWM)",
+        "Cascaded PI loop design & tuning",
+        "Encoder calibration & filtering",
+        "Motor characterization",
+        "Commutation theory"
+      ]
     },
     {
       "group": "Electronics",
-      "items": ["Analog design: op-amps, instrumentation amps, active filters", "High-side bidirectional current sensing", "KiCad", "Breadboard & perfboard prototyping", "Bench instrumentation (scope, DMM)", "Least-squares sensor calibration"]
+      "items": [
+        "Analog design: op-amps, instrumentation amps, active filters",
+        "High-side bidirectional current sensing",
+        "KiCad",
+        "Breadboard & perfboard prototyping",
+        "Bench instrumentation (scope, DMM)",
+        "Least-squares sensor calibration"
+      ]
     },
     {
       "group": "Design & Manufacturing",
-      "items": ["Onshape", "Fusion 360 + CAM", "CNC & manual machining", "3D printing & design for printing", "Welding (AWS-certified TIG & stick)", "Soldering", "Fixture design", "Fabrication from technical drawings (GD&T)"]
+      "items": [
+        "Onshape",
+        "Fusion 360 + CAM",
+        "CNC & manual machining",
+        "3D printing & design for printing",
+        "Welding (AWS-certified TIG & stick)",
+        "Soldering",
+        "Fixture design",
+        "Fabrication from technical drawings (GD&T)"
+      ]
     },
     {
       "group": "Tools",
-      "items": ["Git", "Linux", "Docker", "Node.js"]
+      "items": [
+        "Git",
+        "Linux",
+        "Docker",
+        "Node.js"
+      ]
     }
   ],
   "certifications": [

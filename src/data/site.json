@@ -1,23 +1,36 @@
 {
   "name": "Jesse Kegley",
   "siteUrl": "",
-  "tagline": "Robotics · Embedded Systems · Fabrication",
-  "roleLine": "Robotics Engineering student at UC Santa Cruz, automation intern at a rocket startup, and certified aerospace TIG welder.",
-  "summary": "I design, build, and program electromechanical systems, from raw stock to closed-loop control. Before robotics school I welded for a living, and I still run the fabrication business I started in 2022.",
+  "tagline": "Robotics · Embedded Systems · Hardware Design",
+  "roleLine": "Robotics Engineering student at UC Santa Cruz, engineering intern at an aerospace startup, and experienced welder/fabricator.",
+  "summary": "My experience building my own welding outfit rekindled my passion for learning about how things work and figuring out how to fix them when they don't - which is what I attribute my choice to study robotics engineering to. At UCSC, I've developed experience in programming embedded systems, designing and implementing control systems, hardware design, sensor technologies, and robotic actuation, amongst a plethora of other things.",
   "availability": "Open to internships in embedded systems, controls, mechatronics, and manufacturing engineering.",
   "email": "jkegley@ucsc.edu",
   "phone": "(443) 818-2095",
-  "showPhone": false,
+  "showPhone": true,
   "location": "Santa Cruz, CA",
   "social": {
     "github": "",
-    "linkedin": "",
+    "linkedin": "https://www.linkedin.com/in/jessekegley2005/",
     "onshape": ""
   },
   "stats": [
-    { "value": "6+ yrs", "label": "professional fabrication & welding experience" },
-    { "value": "2", "label": "American Welding Society certs — aerospace TIG (D17.1) & structural stick (D1.5)" },
-    { "value": "20 kHz", "label": "field-oriented control loop, written from scratch in bare-metal C" }
+    {
+      "value": "6+ yrs",
+      "label": "professional fabrication & welding experience"
+    },
+    {
+      "value": "4",
+      "label": "AWS Certifications - TIG (D17.1 - Aerospace, Carbon Steel, Stainless Steel, and Aluminum) and Stick (D1.5 - Carbon Steel Unlimited)"
+    },
+    {
+      "value": "",
+      "label": "Designed Field Oriented Control-based BLDC control system from scratch (software and hardware)"
+    },
+    {
+      "value": "",
+      "label": "Fully Autonomous Combat Robot designed around PIC32 with custom-made IR sensors and analog circuitry"
+    }
   ],
   "analytics": {
     "provider": "goatcounter",
