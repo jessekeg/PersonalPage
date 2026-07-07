@@ -24,12 +24,16 @@
       "label": "AWS Certifications - TIG (D17.1 - Aerospace, Carbon Steel, Stainless Steel, and Aluminum) and Stick (D1.5 - Carbon Steel Unlimited)"
     },
     {
-      "value": "",
+      "value": "STM32",
       "label": "Designed Field Oriented Control-based BLDC control system from scratch (software and hardware)"
     },
     {
-      "value": "",
-      "label": "Fully Autonomous Combat Robot designed around PIC32 with custom-made IR sensors and analog circuitry"
+      "value": "PIC32",
+      "label": "Fully Autonomous Combat Robot designed with custom-made IR sensors and analog circuitry"
+    },
+    {
+      "value": "FPGA",
+      "label": "HDMI and VGA interface with retro-style video game"
     }
   ],
   "analytics": {
