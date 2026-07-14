@@ -1,0 +1,22 @@
+  <section class="section">
+    <div class="container skill-split">
+      <div>
+        <p class="kicker">Tools and tech that I feel experience with</p>
+        <h2>Mechanical instincts with embedded systems depth.</h2>
+      </div>
+      <div class="skill-columns">
+        <div>
+          <p class="skill-label">Design & manufacturing</p>
+          <div class="skill-tags">
+            {designSkills.map((item) => <span class="tag">{item}</span>)}
+          </div>
+        </div>
+        <div>
+          <p class="skill-label">Embedded systems</p>
+          <div class="skill-tags">
+            {embeddedSkills.map((item) => <span class="tag">{item}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
