@@ -10,13 +10,17 @@ export interface Slide {
 interface Props {
   slides: Slide[];
   interval?: number;
+  // `fill`: borderless, cover-cropped, and stretches to fill its container's
+  // height (for sitting flush beside other content). Default is a bordered,
+  // fixed-aspect frame that shows the whole photo.
+  fill?: boolean;
 }
 
-const { slides, interval = 5000 } = Astro.props;
+const { slides, interval = 5000, fill = false } = Astro.props;
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
 
-<div class="slideshow" data-interval={interval}>
+<div class:list={['slideshow', { fill }]} data-interval={interval}>
   <div class="frame">
     {
       slides.map((s, i) => (
@@ -132,6 +136,25 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     object-fit: contain;
   }
 
+  /* Fill variant: seamless, cover-cropped, stretches to its container height. */
+  .slideshow.fill {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .slideshow.fill .frame {
+    flex: 1;
+    aspect-ratio: auto;
+    min-height: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .slideshow.fill .slide img {
+    object-fit: cover;
+  }
+
   .ss-arrow {
     position: absolute;
     top: 50%;
@@ -217,6 +240,17 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
 
   @media (max-width: 800px) {
     .frame {
+      aspect-ratio: 4 / 3;
+    }
+
+    /* Once stacked, the fill variant has no parent height to fill, so fall
+       back to a fixed aspect ratio instead of collapsing. */
+    .slideshow.fill {
+      height: auto;
+    }
+
+    .slideshow.fill .frame {
+      flex: none;
       aspect-ratio: 4 / 3;
     }
 

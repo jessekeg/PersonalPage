@@ -3,12 +3,47 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import Slideshow from '../components/Slideshow.astro';
 import site from '../data/site.json';
 import resume from '../data/resume.json';
 import { withBase } from '../lib/url';
 
 const featured = (await getCollection('projects', ({ data }) => data.featured && !data.draft))
   .sort((a, b) => b.data.sortDate.valueOf() - a.data.sortDate.valueOf());
+
+// Teaser reel of build photos. Images live in public/images/projects-gallery/.
+const gallerySlides = [
+  {
+    image: '/images/projects-gallery/combat-robot.jpg',
+    caption: 'Combat robot on the bench between test runs.',
+    alt: 'Laser-cut combat robot chassis with stacked electronics on a lab bench',
+  },
+  {
+    image: '/images/projects-gallery/axial-flux-motor.jpg',
+    caption: 'Axial flux motor prototype, fresh off the printer.',
+    alt: 'Hand holding a disc-shaped axial flux motor prototype',
+  },
+  {
+    image: '/images/projects-gallery/esc-firmware.jpg',
+    caption: 'ESC tapped with magnet wire for custom firmware flashing.',
+    alt: 'ESC circuit board with fine magnet wire soldered to the microcontroller',
+  },
+  {
+    image: '/images/projects-gallery/analog-filter.jpg',
+    caption: 'Analog filter stage, point-to-point on protoboard.',
+    alt: 'Hand-soldered analog filter circuit on a protoboard',
+  },
+  {
+    image: '/images/projects-gallery/cnc-fixture.jpg',
+    caption: 'CNC-machined fixture with hardware installed.',
+    alt: 'Black CNC-machined fixture plate with socket head cap screws',
+  },
+  {
+    image: '/images/projects-gallery/scrap-hammer.jpg',
+    caption: 'Small hammer machined from scrap stock.',
+    alt: 'Machined metal hammer with knurled handle on a desk',
+  },
+];
 
 const recentExperience = resume.experience.slice(0, 3);
 const skillGroups = resume.skills;
@@ -66,8 +101,8 @@ const personLd = JSON.stringify({
           <p class="kicker">Current focus</p>
           <ul>
             <li>Robotics Engineering B.S. with an Electrical Engineering minor</li>
-            <li>Automation and aerospace engineering internship work</li>
-            <li>Motor control, mechatronics, sensors, and electromechanical builds</li>
+            <li>Sensors, actuation, and hardware design</li>
+            <li>Designing automated systems for aerospace manufacturing</li>
           </ul>
         </div>
       </aside>
@@ -82,8 +117,14 @@ const personLd = JSON.stringify({
         moreHref="/projects/"
         moreLabel="All projects"
       />
-      <div class="project-grid">
-        {featured.map((p, i) => <ProjectCard project={p} index={i} />)}
+      <div class="work-layout">
+        <div class="project-grid">
+          {featured.map((p, i) => <ProjectCard project={p} index={i} />)}
+        </div>
+        <div class="gallery">
+          <p class="gallery-label">From the bench</p>
+          <Slideshow slides={gallerySlides} fill />
+        </div>
       </div>
     </div>
   </section>
@@ -280,6 +321,37 @@ const personLd = JSON.stringify({
     gap: 1.2rem;
   }
 
+  /* Featured cards on the left, build-photo reel flush alongside on the right. */
+  .work-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.62fr);
+    gap: clamp(1.2rem, 3vw, 2rem);
+    align-items: stretch;
+  }
+
+  .work-layout .project-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .gallery {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gallery-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 1rem;
+  }
+
+  .gallery :global(.slideshow) {
+    flex: 1;
+  }
+
   .about-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
@@ -400,8 +472,13 @@ const personLd = JSON.stringify({
 
   @media (max-width: 800px) {
     .hero-grid,
+    .work-layout,
     .about-grid {
       grid-template-columns: 1fr;
+    }
+
+    .gallery {
+      margin-top: 0.6rem;
     }
 
     .quick-card {
