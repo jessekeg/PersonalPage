@@ -2,7 +2,42 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import Slideshow from '../../components/Slideshow.astro';
 import { withBase } from '../../lib/url';
+
+// Build photos for the slideshow. Images live in public/images/projects-gallery/.
+const gallerySlides = [
+  {
+    image: '/images/projects-gallery/combat-robot.jpg',
+    caption: 'Combat robot on the bench between test runs.',
+    alt: 'Laser-cut combat robot chassis with stacked electronics on a lab bench',
+  },
+  {
+    image: '/images/projects-gallery/axial-flux-motor.jpg',
+    caption: 'Axial flux motor prototype, fresh off the printer.',
+    alt: 'Hand holding a disc-shaped axial flux motor prototype',
+  },
+  {
+    image: '/images/projects-gallery/esc-firmware.jpg',
+    caption: 'ESC tapped with magnet wire for custom firmware flashing.',
+    alt: 'ESC circuit board with fine magnet wire soldered to the microcontroller',
+  },
+  {
+    image: '/images/projects-gallery/analog-filter.jpg',
+    caption: 'Analog filter stage, point-to-point on protoboard.',
+    alt: 'Hand-soldered analog filter circuit on a protoboard',
+  },
+  {
+    image: '/images/projects-gallery/cnc-fixture.jpg',
+    caption: 'CNC-machined fixture with hardware installed.',
+    alt: 'Black CNC-machined fixture plate with socket head cap screws',
+  },
+  {
+    image: '/images/projects-gallery/scrap-hammer.jpg',
+    caption: 'Small hammer machined from scrap stock.',
+    alt: 'Machined metal hammer with knurled handle on a desk',
+  },
+];
 
 // Drafts are visible in `npm run dev` (with a badge) but excluded from builds.
 const projects = (
@@ -29,6 +64,16 @@ const inProgressPapers = papers.filter((p) => p.data.draft);
       </p>
       <div class="project-grid">
         {projects.map((p, i) => <ProjectCard project={p} index={i} />)}
+      </div>
+
+      <div class="gallery">
+        <p class="kicker">From the bench</p>
+        <p class="gallery-lede">
+          Build photos from projects in progress — the parts between CAD and the finished writeup.
+        </p>
+        <div class="gallery-show">
+          <Slideshow slides={gallerySlides} />
+        </div>
       </div>
 
       {
@@ -108,6 +153,23 @@ const inProgressPapers = papers.filter((p) => p.data.draft);
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.2rem;
+  }
+
+  /* ---- gallery ---- */
+  .gallery {
+    margin-top: 3.5rem;
+    border-top: 1px solid var(--line);
+    padding-top: 2.2rem;
+  }
+
+  .gallery-lede {
+    color: var(--ink-soft);
+    max-width: 58ch;
+    margin-bottom: 1.8rem;
+  }
+
+  .gallery-show {
+    max-width: 920px;
   }
 
   /* ---- writing ---- */

@@ -38,6 +38,8 @@ function rehypeBasePaths() {
 
 export default defineConfig({
   base: BASE,
+  // Honor PORT so tooling can assign a free port when 4321 is taken.
+  server: { port: Number(process.env.PORT) || 4321 },
   // Until siteUrl is set in site.json, canonical URLs and the sitemap are skipped.
   site: site.siteUrl || undefined,
   integrations: site.siteUrl ? [sitemap()] : [],

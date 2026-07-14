@@ -1,0 +1,228 @@
+---
+import { withBase } from '../lib/url';
+
+export interface Slide {
+  image: string;
+  caption: string;
+  alt: string;
+}
+
+interface Props {
+  slides: Slide[];
+  interval?: number;
+}
+
+const { slides, interval = 5000 } = Astro.props;
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+---
+
+<div class="slideshow" data-interval={interval}>
+  <div class="frame">
+    {
+      slides.map((s, i) => (
+        <figure class:list={['slide', { active: i === 0 }]} data-caption={s.caption}>
+          <img src={withBase(s.image)} alt={s.alt} loading={i === 0 ? 'eager' : 'lazy'} />
+        </figure>
+      ))
+    }
+    <button class="ss-arrow" data-dir="-1" aria-label="Previous photo">←</button>
+    <button class="ss-arrow" data-dir="1" aria-label="Next photo">→</button>
+  </div>
+  <div class="ss-foot">
+    <p class="ss-caption">{slides[0].caption}</p>
+    <div class="ss-meta">
+      <span class="ss-count">01 / {pad(slides.length - 1)}</span>
+      <div class="ss-dots">
+        {
+          slides.map((_, i) => (
+            <button
+              class:list={['dot', { active: i === 0 }]}
+              data-goto={i}
+              aria-label={`Go to photo ${i + 1}`}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // One hoisted script drives every slideshow on the page independently.
+  document.querySelectorAll<HTMLElement>('.slideshow').forEach((show) => {
+    const slides = [...show.querySelectorAll<HTMLElement>('.slide')];
+    const dots = [...show.querySelectorAll<HTMLButtonElement>('.dot')];
+    const caption = show.querySelector<HTMLElement>('.ss-caption')!;
+    const count = show.querySelector<HTMLElement>('.ss-count')!;
+    const interval = Number(show.dataset.interval) || 5000;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pad = (n: number) => String(n + 1).padStart(2, '0');
+
+    // Default to "in view" so autoplay still works if IntersectionObserver
+    // never fires; the observer only pauses it while actually off-screen.
+    let index = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    let inView = true;
+    let hovered = false;
+
+    function go(n: number) {
+      index = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      caption.textContent = slides[index].dataset.caption ?? '';
+      count.textContent = `${pad(index)} / ${pad(slides.length - 1)}`;
+    }
+
+    function stop() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    // Auto-advance only when visible, not hovered, and motion is okay.
+    function maybePlay() {
+      stop();
+      if (reducedMotion || !inView || hovered || document.hidden) return;
+      timer = setInterval(() => go(index + 1), interval);
+    }
+
+    show.addEventListener('pointerenter', () => { hovered = true; maybePlay(); });
+    show.addEventListener('pointerleave', () => { hovered = false; maybePlay(); });
+    document.addEventListener('visibilitychange', maybePlay);
+    new IntersectionObserver(
+      ([entry]) => { inView = entry.isIntersecting; maybePlay(); },
+      { threshold: 0.2 },
+    ).observe(show);
+    maybePlay();
+
+    // Manual controls reset the timer so the next auto-advance isn't jarring.
+    show.querySelectorAll<HTMLButtonElement>('.ss-arrow').forEach((btn) =>
+      btn.addEventListener('click', () => { go(index + Number(btn.dataset.dir)); maybePlay(); }),
+    );
+    dots.forEach((d) =>
+      d.addEventListener('click', () => { go(Number(d.dataset.goto)); maybePlay(); }),
+    );
+  });
+</script>
+
+<style>
+  .frame {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    background: var(--bg-inset);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.55s ease;
+  }
+
+  .slide.active {
+    opacity: 1;
+  }
+
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ss-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(4px);
+    color: var(--ink);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .ss-arrow:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .ss-arrow[data-dir='-1'] {
+    left: 0.9rem;
+  }
+
+  .ss-arrow[data-dir='1'] {
+    right: 0.9rem;
+  }
+
+  .ss-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: 0.7rem;
+  }
+
+  .ss-caption {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  .ss-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .ss-count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+
+  .ss-dots {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .dot:hover {
+    border-color: var(--accent);
+  }
+
+  .dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 800px) {
+    .frame {
+      aspect-ratio: 4 / 3;
+    }
+
+    .ss-foot {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+  }
+</style>
