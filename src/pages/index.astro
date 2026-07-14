@@ -37,6 +37,7 @@ const personLd = JSON.stringify({
       <p class="hero-summary">{site.summary}</p>
       <div class="hero-actions">
         <a class="btn" href={withBase('/projects/')}>View projects</a>
+        <a class="btn btn-ghost" href={withBase('/fabrication/')}>Fabrication</a>
         <a class="btn btn-ghost" href={withBase('/resume/')}>Résumé</a>
       </div>
       <dl class="stats">
@@ -69,11 +70,16 @@ const personLd = JSON.stringify({
   <section class="section">
     <div class="container about-grid">
       <div>
-        <SectionHeading kicker="02 / About" title="From raw stock to closed-loop control" />
+        <SectionHeading
+          kicker="02 / About"
+          title="From raw stock to closed-loop control"
+          moreHref="/about/"
+          moreLabel="More about me"
+        />
         <p class="about-text">
           I came to engineering through the trades. I was welding professionally before I started
-          my robotics degree at UC Santa Cruz, and I've run my own <a href={withBase('/fabrication/')}>fabrication
-          and welding</a> business, Kegley Metalwork, since 2022.
+          my robotics degree at UC Santa Cruz, and I've run my own fabrication and welding
+          business, Kegley Metalwork, since 2022.
         </p>
         <p class="about-text">
           That background carries into the engineering work. I design parts that can actually be

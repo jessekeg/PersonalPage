@@ -20,6 +20,9 @@ dashboard/secrets.json
 CLAUDE.md
 .claude/
 
+# Full-resolution photo originals — web-sized copies live in public/images/
+Photos/
+
 # machine-local editor / tooling config
 .vscode/
 .idea/

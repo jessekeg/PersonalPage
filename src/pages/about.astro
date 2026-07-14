@@ -1,0 +1,544 @@
+---
+import Base from '../layouts/Base.astro';
+import resume from '../data/resume.json';
+import { withBase } from '../lib/url';
+
+const designSkills =
+  resume.skills.find((g) => g.group === 'Design & Manufacturing')?.items.slice(0, 6) ?? [];
+const embeddedSkills = resume.skills.find((g) => g.group === 'Embedded')?.items.slice(0, 5) ?? [];
+
+// Photos for the "Off the clock" slideshow. Images live in public/images/about/.
+const slides = [
+  { image: '/images/about/surfing.jpg', caption: 'Out in the lineup.', alt: 'Jesse surfing a wave' },
+  { image: '/images/about/guitar-fire.jpg', caption: 'Guitars around a beach fire.', alt: 'Playing guitar with a friend around a campfire' },
+  { image: '/images/about/guitar-stage.jpg', caption: 'Playing a set.', alt: 'Playing electric guitar on stage' },
+  { image: '/images/about/welding-arc.jpg', caption: 'Weekend hull repair outside the home shop.', alt: 'Welding an aluminum hull outdoors' },
+  { image: '/images/about/oxy-cutting.jpg', caption: 'Oxy-fuel work at the shop in Maryland.', alt: 'Cutting steel with an oxy-fuel torch' },
+  { image: '/images/about/jcm-fab.jpg', caption: 'A finished fab job from my time at JCM Associates.', alt: 'Standing inside a large welded steel storage cage' },
+];
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+---
+
+<Base
+  title="About"
+  description="More about Jesse Kegley: robotics engineering, fabrication, embedded systems, and the hands-on path between them."
+>
+  <section class="about-hero dot-grid">
+    <div class="container hero-grid">
+      <div>
+        <p class="kicker">About</p>
+        <h1>I like engineering best when the work has to survive the real world.</h1>
+        <p class="lede">
+          I am a robotics engineering student at UC Santa Cruz with a welding and fabrication
+          background. Most of my work sits between mechanical design, embedded software,
+          electronics, and the practical constraints that show up once a design leaves the screen.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href={withBase('/projects/')}>Projects</a>
+          <a class="btn btn-ghost" href={withBase('/fabrication/')}>Fabrication</a>
+        </div>
+      </div>
+      <aside class="hero-side">
+        <figure class="portrait">
+          <img
+            src={withBase('/images/headshot.jpg')}
+            alt="Portrait of Jesse Kegley"
+            width="800"
+            height="1000"
+            loading="eager"
+          />
+        </figure>
+        <div class="quick-card">
+          <p class="kicker">Current focus</p>
+          <ul>
+            <li>Robotics Engineering B.S. with an Electrical Engineering minor</li>
+            <li>Automation and aerospace engineering internship work</li>
+            <li>Motor control, mechatronics, sensors, and electromechanical builds</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story-grid">
+      <div>
+        <p class="kicker">How I got here</p>
+        <h2>Trades first, then robotics.</h2>
+      </div>
+      <div class="story-copy">
+        <p>
+          Before engineering school, I welded for a living. I worked around job sites, shop
+          equipment, repair work, estimates, drawings, schedules, and clients who needed a clear
+          answer more than a perfect theory. I still run Kegley Metalwork, the welding and
+          fabrication business I started in 2022.
+        </p>
+        <p>
+          That path changed how I look at engineering. I care about tolerance stackups, service
+          access, cost, setup time, and whether a part can be made with the equipment available.
+          When I design a mechanism, board, fixture, or control system, I am usually thinking about
+          the person who has to build it, debug it, repair it, or explain it later.
+        </p>
+        <p>
+          At UCSC, that hands-on background has turned into a broader electromechanical toolkit:
+          embedded C, motor control, analog circuits, CAD, machining, fabrication, and systems that
+          combine sensors, actuators, firmware, and structure in one build.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="offclock-head">
+        <div>
+          <p class="kicker">Off the clock</p>
+          <h2>Not everything runs on firmware.</h2>
+        </div>
+        <p class="offclock-copy">
+          Outside of coursework and shop jobs I'm usually in the water, around a fire with a
+          guitar, or finding an excuse to light the torch anyway. Same hands, different projects.
+        </p>
+      </div>
+
+      <div class="slideshow" data-interval="5000">
+        <div class="frame">
+          {
+            slides.map((s, i) => (
+              <figure
+                class:list={['slide', { active: i === 0 }]}
+                data-caption={s.caption}
+              >
+                <img src={withBase(s.image)} alt={s.alt} loading={i === 0 ? 'eager' : 'lazy'} />
+              </figure>
+            ))
+          }
+          <button class="ss-arrow" data-dir="-1" aria-label="Previous photo">←</button>
+          <button class="ss-arrow" data-dir="1" aria-label="Next photo">→</button>
+        </div>
+        <div class="ss-foot">
+          <p class="ss-caption">{slides[0].caption}</p>
+          <div class="ss-meta">
+            <span class="ss-count">01 / {pad(slides.length - 1)}</span>
+            <div class="ss-dots">
+              {
+                slides.map((_, i) => (
+                  <button
+                    class:list={['dot', { active: i === 0 }]}
+                    data-goto={i}
+                    aria-label={`Go to photo ${i + 1}`}
+                  />
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container values-grid">
+      <article>
+        <h2>What I tend to build</h2>
+        <p>
+          I am drawn to projects where the boundaries are blurry: a motor controller that needs
+          careful firmware and board-level current sensing, a robot that depends on analog optics
+          and mechanical packaging, or a fixture that only works if manufacturing details are part
+          of the design from the start.
+        </p>
+      </article>
+      <article>
+        <h2>How I work</h2>
+        <p>
+          I like taking responsibility for the full loop: understand the problem, make the design,
+          build the prototype, test it honestly, then make the next version better. The fabrication
+          background keeps me practical; the robotics work keeps pulling me toward tighter control,
+          better sensing, and cleaner systems.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container skill-split">
+      <div>
+        <p class="kicker">Tools I reach for</p>
+        <h2>Mechanical instincts with embedded systems depth.</h2>
+      </div>
+      <div class="skill-columns">
+        <div>
+          <p class="skill-label">Design & manufacturing</p>
+          <div class="skill-tags">
+            {designSkills.map((item) => <span class="tag">{item}</span>)}
+          </div>
+        </div>
+        <div>
+          <p class="skill-label">Embedded systems</p>
+          <div class="skill-tags">
+            {embeddedSkills.map((item) => <span class="tag">{item}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const show = document.querySelector<HTMLElement>('.slideshow');
+  if (show) {
+    const slides = [...show.querySelectorAll<HTMLElement>('.slide')];
+    const dots = [...show.querySelectorAll<HTMLButtonElement>('.dot')];
+    const caption = show.querySelector<HTMLElement>('.ss-caption')!;
+    const count = show.querySelector<HTMLElement>('.ss-count')!;
+    const interval = Number(show.dataset.interval) || 5000;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pad = (n: number) => String(n + 1).padStart(2, '0');
+
+    // Default to "in view" so autoplay still works if IntersectionObserver
+    // never fires; the observer only pauses it while actually off-screen.
+    let index = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    let inView = true;
+    let hovered = false;
+
+    function go(n: number) {
+      index = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      caption.textContent = slides[index].dataset.caption ?? '';
+      count.textContent = `${pad(index)} / ${pad(slides.length - 1)}`;
+    }
+
+    function stop() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+
+    // Auto-advance only when visible, not hovered, and motion is okay.
+    function maybePlay() {
+      stop();
+      if (reducedMotion || !inView || hovered || document.hidden) return;
+      timer = setInterval(() => go(index + 1), interval);
+    }
+
+    show.addEventListener('pointerenter', () => { hovered = true; maybePlay(); });
+    show.addEventListener('pointerleave', () => { hovered = false; maybePlay(); });
+    document.addEventListener('visibilitychange', maybePlay);
+    new IntersectionObserver(
+      ([entry]) => { inView = entry.isIntersecting; maybePlay(); },
+      { threshold: 0.2 },
+    ).observe(show);
+    maybePlay();
+
+    // Manual controls reset the timer so the next auto-advance isn't jarring.
+    show.querySelectorAll<HTMLButtonElement>('.ss-arrow').forEach((btn) =>
+      btn.addEventListener('click', () => { go(index + Number(btn.dataset.dir)); maybePlay(); }),
+    );
+    dots.forEach((d) =>
+      d.addEventListener('click', () => { go(Number(d.dataset.goto)); maybePlay(); }),
+    );
+  }
+</script>
+
+<style>
+  .about-hero {
+    padding-block: clamp(4rem, 10vw, 7rem) clamp(3rem, 7vw, 4.5rem);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.75fr);
+    gap: clamp(2rem, 6vw, 4rem);
+    align-items: start;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 6vw, 4rem);
+    max-width: 12ch;
+    margin-bottom: 1.1rem;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 0.9rem;
+  }
+
+  .lede {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    font-size: 1.05rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .hero-side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .portrait {
+    margin: 0;
+    max-width: 340px;
+  }
+
+  .portrait img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.35);
+  }
+
+  .quick-card {
+    border-left: 2px solid var(--accent);
+    padding-left: 1.4rem;
+  }
+
+  .quick-card .kicker {
+    margin-bottom: 0.8rem;
+  }
+
+  .quick-card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--ink-soft);
+    font-size: 0.94rem;
+  }
+
+  .quick-card li {
+    margin-bottom: 0.55rem;
+  }
+
+  .quick-card li::marker {
+    color: var(--accent);
+  }
+
+  .story-grid,
+  .skill-split {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(2rem, 6vw, 4rem);
+    align-items: start;
+  }
+
+  .story-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: var(--ink-soft);
+    max-width: 70ch;
+  }
+
+  /* ---- off the clock / slideshow ---- */
+  .offclock-head {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(2rem, 6vw, 4rem);
+    align-items: end;
+    margin-bottom: 1.8rem;
+  }
+
+  .offclock-head h2 {
+    margin-bottom: 0;
+  }
+
+  .offclock-copy {
+    color: var(--ink-soft);
+    max-width: 58ch;
+  }
+
+  .slideshow {
+    max-width: 920px;
+  }
+
+  .frame {
+    position: relative;
+    aspect-ratio: 3 / 2;
+    background: var(--bg-inset);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.55s ease;
+  }
+
+  .slide.active {
+    opacity: 1;
+  }
+
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .ss-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(4px);
+    color: var(--ink);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .ss-arrow:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .ss-arrow[data-dir='-1'] {
+    left: 0.9rem;
+  }
+
+  .ss-arrow[data-dir='1'] {
+    right: 0.9rem;
+  }
+
+  .ss-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-top: 0.7rem;
+  }
+
+  .ss-caption {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  .ss-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .ss-count {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+
+  .ss-dots {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .dot:hover {
+    border-color: var(--accent);
+  }
+
+  .dot.active {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .values-grid article {
+    border-top: 1px solid var(--line);
+    padding-top: 1.4rem;
+  }
+
+  .values-grid p {
+    color: var(--ink-soft);
+  }
+
+  .skill-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.4rem;
+  }
+
+  .skill-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    margin-bottom: 0.6rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .skill-tags .tag {
+    white-space: normal;
+  }
+
+  @media (max-width: 800px) {
+    .hero-grid,
+    .story-grid,
+    .skill-split,
+    .values-grid,
+    .skill-columns,
+    .offclock-head {
+      grid-template-columns: 1fr;
+    }
+
+    .offclock-head {
+      gap: 0.9rem;
+    }
+
+    h1 {
+      max-width: 13ch;
+    }
+
+    .quick-card {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      padding: 1.3rem 0 0;
+    }
+
+    .frame {
+      aspect-ratio: 4 / 3;
+    }
+
+    .ss-foot {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+  }
+</style>
