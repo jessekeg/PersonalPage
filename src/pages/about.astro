@@ -9,12 +9,12 @@ const embeddedSkills = resume.skills.find((g) => g.group === 'Embedded')?.items.
 
 // Photos for the "Off the clock" slideshow. Images live in public/images/about/.
 const slides = [
-  { image: '/images/about/surfing.jpg', caption: 'Out in the lineup.', alt: 'Jesse surfing a wave' },
-  { image: '/images/about/guitar-fire.jpg', caption: 'Guitars around a beach fire.', alt: 'Playing guitar with a friend around a campfire' },
-  { image: '/images/about/guitar-stage.jpg', caption: 'Playing a set.', alt: 'Playing electric guitar on stage' },
+  { image: '/images/about/surfing.jpg', caption: 'Surfing near Santa Cruz', alt: 'Surfing near Santa Cruz' },
+  { image: '/images/about/guitar-fire.jpg', caption: 'Camping, fire, guitar', alt: 'Playing guitar with a friend around a campfire' },
+  { image: '/images/about/guitar-stage.jpg', caption: '2019 Memphis International Blues Festival', alt: 'Bastola Band Gig' },
   { image: '/images/about/welding-arc.jpg', caption: 'Weekend hull repair outside the home shop.', alt: 'Welding an aluminum hull outdoors' },
-  { image: '/images/about/oxy-cutting.jpg', caption: 'Oxy-fuel work at the shop in Maryland.', alt: 'Cutting steel with an oxy-fuel torch' },
-  { image: '/images/about/jcm-fab.jpg', caption: 'A finished fab job from my time at JCM Associates.', alt: 'Standing inside a large welded steel storage cage' },
+  { image: '/images/about/oxy-cutting.jpg', caption: 'Oxy-fuel work at the shop in Maryland.', alt: 'Oxy Cutting' },
+  { image: '/images/about/jcm-fab.jpg', caption: 'A finished fab job from my time at JCM Associates.', alt: 'Welding' },
 ];
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
@@ -27,7 +27,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     <div class="container hero-grid">
       <div>
         <p class="kicker">About</p>
-        <h1>I like engineering best when the work has to survive the real world.</h1>
+        <h1>Engineering, welding, guitar and surfing.</h1>
         <p class="lede">
           I am a robotics engineering student at UC Santa Cruz with a welding and fabrication
           background. Most of my work sits between mechanical design, embedded software,

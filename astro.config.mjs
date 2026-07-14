@@ -14,7 +14,7 @@ const site = JSON.parse(
 //   • Custom domain / user-page repo (served at the root) → change this to '/'.
 // Templates use the withBase() helper (src/lib/url.ts) and markdown images are
 // rewritten by the rehype pass below, so flipping this one value is all it takes.
-const BASE = '/PersonalPage';
+const BASE = '/';
 
 // Astro doesn't base-prefix root-absolute URLs written by hand inside markdown
 // (e.g. ![](/images/robot/x.jpg)). This build-time pass does. No-op when BASE='/'.
